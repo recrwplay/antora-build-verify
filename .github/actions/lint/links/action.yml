@@ -38,11 +38,14 @@ runs:
         file: './antora.yml'
         key-path: '["version"]'
 
-    - name: Find links to test
-        run: |
-          git diff ${{ inputs.base }}..${{ inputs.head }} -Glink\: --name-only | npx pino-pretty > linklog
-        env:
-          GITHUB_TOKEN: ${{ inputs.git-token }}
+    - run: 'git diff ${{ inputs.base }}..${{ inputs.head }} -Glink: --name-only | npx pino-pretty > linklog'
+      shell: bash
+
+    # - name: Find links to test
+    #     run: |
+    #       git diff ${{ inputs.base }}..${{ inputs.head }} -Glink\: --name-only | npx pino-pretty > linklog
+    #     env:
+    #       GITHUB_TOKEN: ${{ inputs.git-token }}
 
     - name: Upload linklog
       uses: actions/upload-artifact@v3

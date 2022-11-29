@@ -26,7 +26,7 @@ jobs:
         run: |
           npm install -g surge
           deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
-          surge ./site $deployurl --token ${{ secrets.SURGE_TOKEN }}
+          surge ./build/site $deployurl --token ${{ secrets.SURGE_TOKEN }}
 
 
 

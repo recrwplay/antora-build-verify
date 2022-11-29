@@ -1,0 +1,20 @@
+# This is an example of the docs-pr.yml workflow available from the recrwplay org
+name: "Verify PR"
+
+on:
+  pull_request:
+
+jobs:
+
+  build:
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - id: build-docs
+        name: Build verify deploy
+        uses: ./.github/actions/build
+        with:
+          package-script: 'build-verify'
+
+

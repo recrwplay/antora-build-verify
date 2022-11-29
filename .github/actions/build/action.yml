@@ -1,0 +1,19 @@
+name: 'Build docs'
+description: 'Builds docs'
+
+inputs:
+  package-script:
+    description: 'The name of the script to run in package.json '
+    type: string
+    default: 'build-verify'
+
+runs:
+  using: "composite"
+  steps: 
+
+  - uses: actions/setup-node@v3
+    with:
+      node-version: '16'
+
+  - run: npm install --omit=dev
+  - run: npm run ${{ inputs.package-script }}

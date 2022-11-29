@@ -1,0 +1,55 @@
+name: 'Build and verify docs pr'
+description: 'Builds and verifies docs'
+
+inputs:
+  package-script:
+    description: 'The name of the script to run in package.json '
+    type: string
+    default: 'build-verify'
+  deploy-id:
+    description: 'The PR number if workflow called by a PR'
+    required: true
+    type: string
+    default: 'na'
+  retain-artifacts:
+    description: 'The number of days to retain artifacts'
+    required: true
+    type: number
+    default: 7
+  surge-deploy-url:
+    description: 'The surge.sh URL'
+    required: true
+    type: string
+
+# outputs:
+#   copied-files: 
+#     description: "Number of files copied"
+#     value: ${{ steps.random-number-generator.outputs.filesNo }}
+
+runs:
+  using: "composite"
+  steps: 
+
+    # build
+
+    - uses: recrwplay/antora-build-verify/build@main
+      with:
+        username: ${{inputs.registry_username}}
+        password: ${{inputs.registry_password}}
+
+
+    # verify
+
+    # - uses: recrwplay/antora-build-verify/verify@main
+    #   with:
+    #     username: ${{inputs.registry_username}}
+    #     password: ${{inputs.registry_password}}
+
+
+
+    # deploy
+
+    # - uses: recrwplay/antora-build-verify/deploy@main
+    #   with:
+    #     username: ${{inputs.registry_username}}
+    #     password: ${{inputs.registry_password}}

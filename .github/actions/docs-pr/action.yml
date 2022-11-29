@@ -41,7 +41,7 @@ runs:
 
     # build
 
-    # - uses: ./.github/actions/build@main
+    # - uses: ./.github/actions/build
     #   with:
     #     package-script: ${{ inputs.package-script }}
 

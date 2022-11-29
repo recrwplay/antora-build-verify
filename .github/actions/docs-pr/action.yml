@@ -34,8 +34,7 @@ runs:
 
     - uses: recrwplay/antora-build-verify/build@main
       with:
-        username: ${{inputs.registry_username}}
-        password: ${{inputs.registry_password}}
+        package-script: ${{ inputs.package-script }}
 
 
     # verify

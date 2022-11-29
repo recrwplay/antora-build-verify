@@ -13,8 +13,9 @@ jobs:
 
       - id: build-docs
         name: Build verify deploy
-        uses: ./.github/actions/build
+        uses: ./.github/actions/docs-pr
         with:
           package-script: 'build-verify'
+          deploy-id: ${{ github.event.number }}
 
 

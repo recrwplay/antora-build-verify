@@ -6,8 +6,20 @@ inputs:
     description: 'The name of the script to run in package.json '
     type: string
     default: 'build-verify'
+  fail-on-warnings:
+    description: 'Fail the Antora verification if the log contains warnings'
+    type: boolean
+    default: false
+  check-new-links:
+    description: 'Check links added in this PR'
+    type: boolean
+    default: false
+  check-all-links:
+    description: 'Check links in all generated HTML'
+    type: boolean
+    default: false
   deploy-id:
-    description: 'The PR number if workflow called by a PR'
+    description: 'The PR number if called by a PR'
     required: true
     type: string
     default: 'na'
@@ -42,14 +54,16 @@ runs:
         package-script: ${{ inputs.package-script }}
 
 
+    # deploy
+
+    # - uses: ./.github/actions/deploy
+    #   with:
+    #     surge-token: ${{inputs.surge-token}}
+        
+    
     # verify
 
     - uses: ./.github/actions/verify
+      with:
+        failOnWarnings: ${{ inputs.fail-on-warnings }}
 
-
-    # deploy
-
-    # - uses: recrwplay/antora-build-verify/deploy@main
-    #   with:
-    #     username: ${{inputs.registry_username}}
-    #     password: ${{inputs.registry_password}}

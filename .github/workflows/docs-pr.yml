@@ -11,11 +11,30 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - id: build-docs
-        name: Build verify deploy
+      - id: build-verify
+        name: Build and verify
         uses: ./.github/actions/docs-pr
         with:
           package-script: 'build-verify'
           deploy-id: ${{ github.event.number }}
+          check-new-links: false
+          check-all-links: false
+
+
+      - id: deploy
+        name: Deploy to surge
+        run: |
+          npm install -g surge
+          deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
+          surge ./site $deployurl --token ${{ secrets.SURGE_TOKEN }}
+
+
+
+        # uses: ./.github/actions/deploy
+        # with:
+        #   surge-tokem: ${{ secrets.SURGE_TOKEN }}
+        #   surge-deploy-url: ${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
+
+
 
 

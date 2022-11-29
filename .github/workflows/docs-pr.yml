@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
       # build and verify
 
@@ -25,20 +27,20 @@ jobs:
           
       # deploy
 
-      - id: deploy
-        name: Deploy
-        if: success() || failure()
-        uses: ./.github/actions/deploy
-        with:
-          surge-token: ${{ secrets.SURGE_TOKEN }}
-          surge-deploy-url: ${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
+      # - id: deploy
+      #   name: Deploy
+      #   if: success() || failure()
+      #   uses: ./.github/actions/deploy
+      #   with:
+      #     surge-token: ${{ secrets.SURGE_TOKEN }}
+      #     surge-deploy-url: ${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
 
       # check all links
 
-      - id: check-links
-        if: success() || failure() && contains( github.event.pull_request.labels.*.name, 'check-links')
-        name: Check links
-        run: npm run check-links
+      # - id: check-links
+      #   if: success() || failure() && contains( github.event.pull_request.labels.*.name, 'check-links')
+      #   name: Check links
+      #   run: npm run check-links
 
 
       # lint tests - new links

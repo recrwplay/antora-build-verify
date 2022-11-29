@@ -30,9 +30,13 @@ runs:
   using: "composite"
   steps: 
 
+    # checkout
+    
+    - uses: actions/checkout@v3
+
     # build
 
-    - uses: ./.github/actions/build@main
+    - uses: ./.github/actions/build@dev
       with:
         package-script: ${{ inputs.package-script }}
 

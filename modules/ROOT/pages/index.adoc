@@ -6,7 +6,7 @@ Just testing workflows, actions, annotations.
 
 include::partial$include-target.adoc[]
 
-I have {no-attribute} that I can use here.
+I have {an-attribute} that I can use here.
 
 This sentence has been added to see if the pr comment is repeated or updated.
 

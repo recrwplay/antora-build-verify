@@ -30,12 +30,20 @@ runs:
   using: "composite"
   steps: 
 
+    # checkout
+    
+    - uses: actions/checkout@v3
+
+    - run: echo Hello
+      shell: bash
+
+    - run: 
+
     # build
 
-    - uses: recrwplay/antora-build-verify/build@main
-      with:
-        username: ${{inputs.registry_username}}
-        password: ${{inputs.registry_password}}
+    # - uses: ./.github/actions/build@dev
+    #   with:
+    #     package-script: ${{ inputs.package-script }}
 
 
     # verify

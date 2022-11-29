@@ -16,17 +16,28 @@ jobs:
         uses: ./.github/actions/docs-pr
         with:
           package-script: 'build-verify'
+          deploy-url: '${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}'
           deploy-id: ${{ github.event.number }}
+          surge-token: ${{ secrets.SURGE_TOKEN }}
           check-new-links: false
           check-all-links: false
 
-
+          
+    # deploy
       - id: deploy
-        name: Deploy to surge
-        run: |
-          npm install -g surge
-          deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
-          surge ./build/site $deployurl --token ${{ secrets.SURGE_TOKEN }}
+        if: success() || failure()
+        uses: ./.github/actions/deploy
+        with:
+          surge-token: ${{ secrets.SURGE_TOKEN }}
+          surge-deploy-url: ${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
+
+
+      # - id: deploy
+      #   name: Deploy to surge
+      #   run: |
+      #     npm install -g surge
+      #     deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
+      #     surge ./build/site $deployurl --token ${{ secrets.SURGE_TOKEN }}
 
 
 

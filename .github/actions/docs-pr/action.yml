@@ -1,4 +1,4 @@
-name: 'Build and verify docs pr'
+name: 'Build and deploy docs pr'
 description: 'Builds and verifies docs'
 
 inputs:
@@ -32,6 +32,10 @@ inputs:
     description: 'The surge.sh URL'
     required: true
     type: string
+  surge-token:
+    description: 'The surge.sh token'
+    required: true
+
 
 # outputs:
 #   copied-files: 
@@ -54,11 +58,12 @@ runs:
         package-script: ${{ inputs.package-script }}
 
 
-    # deploy
+    # # deploy
 
     # - uses: ./.github/actions/deploy
     #   with:
-    #     surge-token: ${{inputs.surge-token}}
+    #     surge-deploy-url: ${{ inputs.surge-deploy-url }}
+    #     surge-token: ${{ inputs.surge-token }}
         
     
     # verify

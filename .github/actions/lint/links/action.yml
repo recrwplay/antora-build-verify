@@ -36,9 +36,12 @@ runs:
         file: './antora.yml'
         key-path: '["version"]'
 
+    - run: 'git diff ${{ inputs.base }}..${{ inputs.head }} -Glink: --name-only | npx pino-pretty'
+      shell: bash
+
     - name: Find links to test
         run: |
-          git diff ${{ inputs.base }}..${{ inputs.head }} -Glink: --name-only | npx pino-pretty | perl -pe 's/modules\/ROOT\/pages\//${{ steps.antora-component-name.outputs.data }}\/${{ steps.antora-component-version.outputs.data }}/' > linklog
+          git diff ${{ inputs.base }}..${{ inputs.head }} -Glink: --name-only | npx pino-pretty > linklog
         env:
           GITHUB_TOKEN: ${{ inputs.git-token }}
 

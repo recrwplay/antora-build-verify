@@ -18,11 +18,6 @@ runs:
   using: "composite"
   steps: 
     
-    # checkout
-    
-    # - uses: actions/checkout@v3
-
-
     # turn this into a matrix to get all **/antora.yml files for eg drivers or docs in subdirs
     - name: Read antora component name
       id: antora-component-name
@@ -41,8 +36,12 @@ runs:
     - run: git fetch origin ${{ inputs.base }}
       shell: bash
 
-    - run: 'git diff origin/${{ inputs.base }}..HEAD -Glink: --name-only | npx pino-pretty > linklog'
+    - run: 'git diff origin/${{ inputs.base }}..HEAD -Glink: --name-only | npx pino-pretty | perl -pe 's/modules\/ROOT\/pages\/(.*)\.adoc/\/$1.html/' > linklog'
       shell: bash
+      
+    # for each file in linklog, run check-links
+
+
 
     # - name: Find links to test
     #     run: |

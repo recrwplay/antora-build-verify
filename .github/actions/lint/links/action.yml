@@ -41,7 +41,7 @@ runs:
     - run: git fetch origin ${{ inputs.base }}
       shell: bash
 
-    - run: 'git diff origin/${{ inputs.base }}..${{ inputs.head }} -Glink: --name-only | npx pino-pretty > linklog'
+    - run: 'git diff origin/${{ inputs.base }}..HEAD -Glink: --name-only | npx pino-pretty > linklog'
       shell: bash
 
     # - name: Find links to test

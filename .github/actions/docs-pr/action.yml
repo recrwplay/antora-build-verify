@@ -32,7 +32,7 @@ runs:
 
     # build
 
-    - uses: recrwplay/antora-build-verify/build@dev
+    - uses: ./antora-build-verify/build@dev
       with:
         package-script: ${{ inputs.package-script }}
 

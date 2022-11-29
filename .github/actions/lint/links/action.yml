@@ -1,0 +1,40 @@
+name: 'Check new links'
+description: 'Check new links in the deployed docs'
+
+runs:
+  using: "composite"
+  steps: 
+    
+    # checkout
+    
+    - uses: actions/checkout@v3
+
+
+    # turn this into a matrix to get all **/antora.yml files for eg drivers or docs in subdirs
+    - name: Read antora component name
+      id: antora-component-name
+      uses: jbutcher5/read-yaml@main
+      with:
+        file: './antora.yml'
+        key-path: '["name"]'
+
+    - name: Read antora component version
+      id: antora-component-version
+      uses: jbutcher5/read-yaml@main
+      with:
+        file: './antora.yml'
+        key-path: '["version"]'
+
+    - name: Find links to test
+        run: |
+          git diff ${{ github.base_ref }}.. ${{ github.head_ref }} -Glink: --name-only | npx pino-pretty | perl -pe 's/modules\/ROOT\/pages\//${{ steps.antora-component-name.outputs.data }}\/${{ steps.antora-component-version.outputs.data }}/' > linklog
+        env:
+          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+
+    - name: Upload linklog
+      uses: actions/upload-artifact@v3
+      with:
+        name: docs
+        path: linklog
+
+    # - run: npm run check-links

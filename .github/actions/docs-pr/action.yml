@@ -10,14 +10,6 @@ inputs:
     description: 'Fail the Antora verification if the log contains warnings'
     type: boolean
     default: false
-  check-new-links:
-    description: 'Check links added in this PR'
-    type: boolean
-    default: false
-  check-all-links:
-    description: 'Check links in all generated HTML'
-    type: boolean
-    default: false
   retain-artifacts:
     description: 'The number of days to retain artifacts'
     required: true

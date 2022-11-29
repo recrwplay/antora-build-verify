@@ -16,8 +16,8 @@ jobs:
         uses: ./.github/actions/docs-pr
         with:
           package-script: 'build-verify'
-          deploy-url: '${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}'
-          deploy-id: ${{ github.event.number }}
+          surge-deploy-url: '${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}'
+          surge-deploy-id: ${{ github.event.number }}
           surge-token: ${{ secrets.SURGE_TOKEN }}
           check-new-links: false
           check-all-links: false
@@ -25,6 +25,7 @@ jobs:
           
     # deploy
       - id: deploy
+        name: Deploy
         if: success() || failure()
         uses: ./.github/actions/deploy
         with:

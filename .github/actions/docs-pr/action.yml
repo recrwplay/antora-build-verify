@@ -18,23 +18,20 @@ inputs:
     description: 'Check links in all generated HTML'
     type: boolean
     default: false
-  deploy-id:
-    description: 'The PR number if called by a PR'
-    required: true
-    type: string
-    default: 'na'
   retain-artifacts:
     description: 'The number of days to retain artifacts'
     required: true
     type: number
     default: 7
+  surge-deploy-id:
+    description: 'The PR number if called by a PR'
+    required: true
+    type: string
+    default: 'na'
   surge-deploy-url:
     description: 'The surge.sh URL'
     required: true
     type: string
-  surge-token:
-    description: 'The surge.sh token'
-    required: true
 
 
 # outputs:
@@ -58,14 +55,6 @@ runs:
         package-script: ${{ inputs.package-script }}
 
 
-    # # deploy
-
-    # - uses: ./.github/actions/deploy
-    #   with:
-    #     surge-deploy-url: ${{ inputs.surge-deploy-url }}
-    #     surge-token: ${{ inputs.surge-token }}
-        
-    
     # verify
 
     - uses: ./.github/actions/verify

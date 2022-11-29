@@ -34,11 +34,14 @@ runs:
     
     - uses: actions/checkout@v3
 
+    - run: echo Hello
+      shell: bash
+
     # build
 
-    - uses: ./.github/actions/build@dev
-      with:
-        package-script: ${{ inputs.package-script }}
+    # - uses: ./.github/actions/build@dev
+    #   with:
+    #     package-script: ${{ inputs.package-script }}
 
 
     # verify

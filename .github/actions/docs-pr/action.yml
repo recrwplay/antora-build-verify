@@ -41,9 +41,9 @@ runs:
 
     # build
 
-    # - uses: ./.github/actions/build
-    #   with:
-    #     package-script: ${{ inputs.package-script }}
+    - uses: ./.github/actions/build
+      with:
+        package-script: ${{ inputs.package-script }}
 
 
     # verify

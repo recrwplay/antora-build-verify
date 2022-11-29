@@ -1,6 +1,10 @@
 name: 'Check new links'
 description: 'Check new links in the deployed docs'
 
+inputs:
+  git-token:
+    description: 'a token for git commands'
+
 runs:
   using: "composite"
   steps: 
@@ -29,7 +33,7 @@ runs:
         run: |
           git diff ${{ github.base_ref }}.. ${{ github.head_ref }} -Glink: --name-only | npx pino-pretty | perl -pe 's/modules\/ROOT\/pages\//${{ steps.antora-component-name.outputs.data }}\/${{ steps.antora-component-version.outputs.data }}/' > linklog
         env:
-          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+          GITHUB_TOKEN: ${{ inputs.git-token }}
 
     - name: Upload linklog
       uses: actions/upload-artifact@v3

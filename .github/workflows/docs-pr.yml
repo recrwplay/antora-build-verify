@@ -36,7 +36,7 @@ jobs:
       # check all links
 
       - id: check-links
-        if: contains( github.event.pull_request.labels.*.name, 'check-links')
+        if: success() || failure() && contains( github.event.pull_request.labels.*.name, 'check-links')
         name: Check links
         run: npm run check-links
 
@@ -45,7 +45,10 @@ jobs:
 
       - id: lint
         name: lint
+        if: success() || failure()
         uses: ./.github/actions/lint/links
+        with:
+          git-token: ${{ secrets.PR_COMMENT_TOKEN }}
 
       # - id: deploy
       #   name: Deploy to surge

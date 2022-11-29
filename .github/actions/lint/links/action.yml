@@ -52,8 +52,8 @@ runs:
 
     - name: use linkcheck
       uses: filiph/linkcheck@v2.0.15+1
-        with:
-          arguments: '-i ${{ inputs.files-to-check }}'
+      with:
+        arguments: '-i ${{ inputs.files-to-check }}'
 
 
 

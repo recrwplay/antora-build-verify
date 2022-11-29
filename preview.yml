@@ -1,7 +1,7 @@
 site:
   title: Antora Actions Test
   url: https://example.com
-  start_page: antora-actions:ROOT:index.adoc
+  start_page: composite-actions:ROOT:index.adoc
 
 content:
   sources:

@@ -7,9 +7,11 @@ inputs:
     required: true
   base:
     description: 'base branch'
+    type: string
     required: true
   head:
     description: 'head branch'
+    type: string
     required: true
 
 runs:

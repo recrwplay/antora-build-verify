@@ -34,9 +34,6 @@ runs:
     
     - uses: actions/checkout@v3
 
-    - run: echo Hello
-      shell: bash
-      
 
     # build
 
@@ -47,11 +44,7 @@ runs:
 
     # verify
 
-    # - uses: recrwplay/antora-build-verify/verify@main
-    #   with:
-    #     username: ${{inputs.registry_username}}
-    #     password: ${{inputs.registry_password}}
-
+    - uses: ./.github/actions/verify
 
 
     # deploy

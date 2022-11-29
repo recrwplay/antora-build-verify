@@ -26,8 +26,11 @@ runs:
   using: "composite"
   steps: 
     
+    # get antora component and version 
+    
     # turn this into a matrix to get all **/antora.yml files for eg drivers or docs in subdirs
     # no way to matrix at this point though so will need to do it another way. Probably a js action.
+    
     - name: Read antora component name
       id: antora-component-name
       uses: jbutcher5/read-yaml@main
@@ -42,31 +45,28 @@ runs:
         file: './antora.yml'
         key-path: '["version"]'
 
+
+    # get files with link: from the diff
+
     - run: git fetch origin ${{ inputs.base }}
       shell: bash
 
     - run: 'git diff origin/${{ inputs.base }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*)\.adoc/) { print \"${{ inputs.surge-deploy-url }}/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > ${{ inputs.files-to-check }}'
       shell: bash
 
-    # for files in linklog, run check-links
+
+    # upload result
+
+    - name: Upload diff output
+      uses: actions/upload-artifact@v3
+      with:
+        name: docs
+        path: ${{ inputs.files-to-check }}
+
+
+    # check the files
 
     - name: use linkcheck
       uses: filiph/linkcheck@v2.0.15+1
       with:
         arguments: '-i ./${{ inputs.files-to-check }}'
-
-
-
-    # - name: Find links to test
-    #     run: |
-    #       git diff ${{ inputs.base }}..${{ inputs.head }} -Glink\: --name-only | npx pino-pretty > linklog
-    #     env:
-    #       GITHUB_TOKEN: ${{ inputs.git-token }}
-
-    - name: Upload linklog
-      uses: actions/upload-artifact@v3
-      with:
-        name: docs
-        path: linklog
-
-    # - run: npm run check-links

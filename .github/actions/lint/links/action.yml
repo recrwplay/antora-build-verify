@@ -4,6 +4,13 @@ description: 'Check new links in the deployed docs'
 inputs:
   git-token:
     description: 'a token for git commands'
+    required: true
+  base:
+    description: 'base branch'
+    required: true
+  head:
+    description: 'head branch'
+    required: true
 
 runs:
   using: "composite"
@@ -31,7 +38,7 @@ runs:
 
     - name: Find links to test
         run: |
-          git diff ${{ github.base_ref }}.. ${{ github.head_ref }} -Glink: --name-only | npx pino-pretty | perl -pe 's/modules\/ROOT\/pages\//${{ steps.antora-component-name.outputs.data }}\/${{ steps.antora-component-version.outputs.data }}/' > linklog
+          git diff ${{ inputs.base }}..${{ inputs.head }} -Glink: --name-only | npx pino-pretty | perl -pe 's/modules\/ROOT\/pages\//${{ steps.antora-component-name.outputs.data }}\/${{ steps.antora-component-version.outputs.data }}/' > linklog
         env:
           GITHUB_TOKEN: ${{ inputs.git-token }}
 

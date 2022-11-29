@@ -49,6 +49,8 @@ jobs:
         uses: ./.github/actions/lint/links
         with:
           git-token: ${{ secrets.PR_COMMENT_TOKEN }}
+          base: ${{ github.base_ref }}
+          head: ${{ github.head_ref }}
 
       # - id: deploy
       #   name: Deploy to surge

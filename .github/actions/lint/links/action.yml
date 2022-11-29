@@ -19,6 +19,7 @@ runs:
   steps: 
     
     # turn this into a matrix to get all **/antora.yml files for eg drivers or docs in subdirs
+    # no way to matrix at this point though so will need to do it another way. Probably a js action.
     - name: Read antora component name
       id: antora-component-name
       uses: jbutcher5/read-yaml@main
@@ -36,7 +37,7 @@ runs:
     - run: git fetch origin ${{ inputs.base }}
       shell: bash
 
-    - run: 'git diff origin/${{ inputs.base }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*)\.adoc/) { print \"\$1\n\" }" > linklog'
+    - run: 'git diff origin/${{ inputs.base }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*)\.adoc/) { print \"${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > linklog'
       shell: bash
 
     # for each file in linklog, run check-links

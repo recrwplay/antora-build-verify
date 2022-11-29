@@ -16,4 +16,6 @@ runs:
       node-version: '16'
 
   - run: npm install --omit=dev
+    shell: bash
   - run: npm run ${{ inputs.package-script }}
+    shell: bash

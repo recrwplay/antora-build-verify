@@ -20,7 +20,7 @@ jobs:
           surge-deploy-id: ${{ github.event.number }}
           check-new-links: false
           check-all-links: false
-          failOnWarnings: true
+          fail-on-warnings: true
 
           
     # deploy

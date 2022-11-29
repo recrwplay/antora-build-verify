@@ -36,7 +36,7 @@ runs:
     - run: git fetch origin ${{ inputs.base }}
       shell: bash
 
-    - run: 'git diff origin/${{ inputs.base }}..HEAD -Glink: --name-only | npx pino-pretty | perl -pe "s/modules\/ROOT\/pages\/(.*)\.adoc/\/$1.html/" > linklog'
+    - run: 'git diff origin/${{ inputs.base }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*)\.adoc/) { print \"\$1\n\" }" > linklog'
       shell: bash
 
     # for each file in linklog, run check-links

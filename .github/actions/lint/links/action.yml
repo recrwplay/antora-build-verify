@@ -13,6 +13,10 @@ inputs:
     description: 'head branch'
     type: string
     required: true
+  surge-deploy-url:
+    description: 'surge url'
+    type: string
+    required: true
 
 runs:
   using: "composite"
@@ -37,10 +41,15 @@ runs:
     - run: git fetch origin ${{ inputs.base }}
       shell: bash
 
-    - run: 'git diff origin/${{ inputs.base }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*)\.adoc/) { print \"${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > linklog'
+    - run: 'git diff origin/${{ inputs.base }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*)\.adoc/) { print \"${{ inputs.surge-deploy-url }}/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > linklog'
       shell: bash
 
-    # for each file in linklog, run check-links
+    # for files in linklog, run check-links
+
+    - name: use linkcheck
+      uses: filiph/linkcheck@v2.0.15+1
+        with:
+          arguments: -i linklog
 
 
 

@@ -38,12 +38,9 @@ runs:
         file: './antora.yml'
         key-path: '["version"]'
 
-    - run: 'git diff ${{ inputs.base }}..${{ inputs.head }} -Glink: --name-only | npx pino-pretty'
-      shell: bash
-
     - name: Find links to test
         run: |
-          git diff ${{ inputs.base }}..${{ inputs.head }} -Glink: --name-only | npx pino-pretty > linklog
+          git diff ${{ inputs.base }}..${{ inputs.head }} -Glink\: --name-only | npx pino-pretty > linklog
         env:
           GITHUB_TOKEN: ${{ inputs.git-token }}
 

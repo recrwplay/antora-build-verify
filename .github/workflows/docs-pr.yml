@@ -28,13 +28,13 @@ jobs:
           
       # deploy
 
-      - id: deploy
-        name: Deploy
-        if: success() || failure()
-        uses: ./.github/actions/deploy
-        with:
-          surge-token: ${{ secrets.SURGE_TOKEN }}
-          surge-deploy-url: ${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
+      # - id: deploy
+      #   name: Deploy
+      #   if: success() || failure()
+      #   uses: ./.github/actions/deploy
+      #   with:
+      #     surge-token: ${{ secrets.SURGE_TOKEN }}
+      #     surge-deploy-url: ${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
 
       # check all links
 

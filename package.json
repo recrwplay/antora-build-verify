@@ -5,8 +5,10 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "antora preview.yml --stacktrace --log-format=pretty",
     "build-verify": "antora --stacktrace --fetch preview.yml --log-format=json --log-level=info --log-file ./build/log/log.json",
-    "publish-verify": "antora --stacktrace --fetch publish.yml --log-format=json --log-file ./build/log/log.json"
+    "publish-verify": "antora --stacktrace --fetch publish.yml --log-format=json --log-file ./build/log/log.json",
+    "check-links": "npm run build && link-checker build/site --do-file files.txt --skip-file scripts/ignore-links.txt"
   },
   "keywords": [
     "antora"

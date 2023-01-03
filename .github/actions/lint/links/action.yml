@@ -63,7 +63,7 @@ runs:
         name: docs
         path: ${{ inputs.files-to-check }}
 
-    - run: npm install --omit=dev
+    - run: npm install
       shell: bash
       
     # - run: npm run check-links

@@ -66,15 +66,15 @@ runs:
     - run: npm install
       shell: bash
       
-    # - run: npm run check-links
-    #   shell: bash
+    - run: npm run check-links
+      shell: bash
 
     # check the files
 
-    - run: npm run start
-      shell: bash
+    # - run: npm run start
+    #   shell: bash
 
-    - name: use linkcheck
-      uses: filiph/linkcheck@v2.0.15+1
-      with:
-        arguments: '-i${{ inputs.files-to-check }}'
+    # - name: use linkcheck
+    #   uses: filiph/linkcheck@v2.0.15+1
+    #   with:
+    #     arguments: '-i${{ inputs.files-to-check }}'

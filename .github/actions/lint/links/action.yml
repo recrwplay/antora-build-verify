@@ -71,5 +71,8 @@ runs:
     #   with:
     #     arguments: '-i${{ inputs.files-to-check }}'
 
-    - name: Check links
-      run: npm run check-links
+    - run: npm install --omit=dev
+      shell: bash
+      
+    - run: npm run check-links
+      shell: bash

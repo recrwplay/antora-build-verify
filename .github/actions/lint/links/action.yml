@@ -63,16 +63,18 @@ runs:
         name: docs
         path: ${{ inputs.files-to-check }}
 
-
-    # check the files
-
-    # - name: use linkcheck
-    #   uses: filiph/linkcheck@v2.0.15+1
-    #   with:
-    #     arguments: '-i${{ inputs.files-to-check }}'
-
     - run: npm install --omit=dev
       shell: bash
       
-    - run: npm run check-links
+    # - run: npm run check-links
+    #   shell: bash
+
+    # check the files
+
+    - run: npm run start
       shell: bash
+
+    - name: use linkcheck
+      uses: filiph/linkcheck@v2.0.15+1
+      with:
+        arguments: '-i${{ inputs.files-to-check }}'

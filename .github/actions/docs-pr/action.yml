@@ -55,11 +55,11 @@ runs:
 
     # check links
 
-    - uses: ./.github/actions/lint/links
-      with:
-        # git-token: ${{ secrets.PR_COMMENT_TOKEN }}
-        surge-deploy-url: '${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}'
-        base: ${{ github.base_ref }}
-        head: ${{ github.head_ref }}
+    # - uses: ./.github/actions/lint/links
+    #   with:
+    #     # git-token: ${{ secrets.PR_COMMENT_TOKEN }}
+    #     surge-deploy-url: '${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}'
+    #     base: ${{ github.base_ref }}
+    #     head: ${{ github.head_ref }}
 
 

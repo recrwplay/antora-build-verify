@@ -51,7 +51,7 @@ runs:
     - run: git fetch origin ${{ inputs.base }}
       shell: bash
 
-    - run: 'git diff origin/${{ inputs.base }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(index)?(.*)\.adoc/) { print \"localhost:8000/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > ${{ inputs.files-to-check }}'
+    - run: 'git diff origin/${{ inputs.base }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(index)?(.*)\.adoc/) { print \"localhost:8000/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$2\n\" }" > ${{ inputs.files-to-check }}'
       shell: bash
 
 

@@ -1,0 +1,5 @@
+# Index page in subdir
+
+## A link to a page a level up
+
+link:../link-target[Link targets]

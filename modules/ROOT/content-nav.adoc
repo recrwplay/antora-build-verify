@@ -1,3 +1,4 @@
 * xref:index.adoc[]
 * xref:introduction.adoc[]
 * xref:link-target.adoc[]
+* xref:subdir/index.adoc[]

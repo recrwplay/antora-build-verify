@@ -6,6 +6,16 @@ on:
 
 jobs:
 
+  vale:
+    name: Vale
+    runs-on: ubuntu-latest
+    if: success() || failure()
+    steps:
+      - uses: ./.github/actions/lint/vale
+        with:
+          git-token: ${{ secrets.GITHUB_TOKEN }}
+
+       
   build-verify-deploy:
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +57,7 @@ jobs:
       # lint tests - new links
 
       - id: lint
-        name: lint
+        name: Lint
         if: success() || failure()
         uses: ./.github/actions/lint/links
         with:
@@ -56,6 +66,15 @@ jobs:
           base: ${{ github.base_ref }}
           head: ${{ github.head_ref }}
 
+      # - id: vale
+      #   name: Vale
+      #   if: success() || failure()
+      #   uses: ./.github/actions/lint/vale
+      #   with:
+      #     git-token: ${{ secrets.PR_COMMENT_TOKEN }}
+      #     surge-deploy-url: '${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}'
+      #     base: ${{ github.base_ref }}
+      #     head: ${{ github.head_ref }}
       # - id: deploy
       #   name: Deploy to surge
       #   run: |

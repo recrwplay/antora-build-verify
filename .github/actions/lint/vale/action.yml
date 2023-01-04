@@ -1,0 +1,26 @@
+name: 'Check style'
+description: 'Check prose style with vale'
+
+inputs:
+  git-token:
+    description: 'a token for git commands'
+    required: true
+  files-to-check:
+    description: 'files to check'
+    type: string
+    default: 'modules/ROOT/pages'
+
+jobs:
+  vale:
+    name: runner / vale
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: errata-ai/vale-action@reviewdog
+        with:
+          files: ${{ inputs.files-to-check }}
+          reporter: github-pr-check
+        env:
+          # Required, set by GitHub actions automatically:
+          # https://docs.github.com/en/actions/security-guides/automatic-token-authentication#about-the-github_token-secret
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

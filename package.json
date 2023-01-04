@@ -10,7 +10,7 @@
     "build": "antora preview.yml --stacktrace --log-format=pretty",
     "build-verify": "antora --stacktrace --fetch preview.yml --log-format=json --log-level=info --log-file ./build/log/log.json",
     "publish-verify": "antora --stacktrace --fetch publish.yml --log-format=json --log-file ./build/log/log.json",
-    "check-links": "npm run build && link-checker build/site --skip-file scripts/ignore-links.txt"
+    "check-links": "npm run build && link-checker build/site --do-file files.txt --skip-file scripts/ignore-links.txt"
   },
   "keywords": [
     "antora"
@@ -21,7 +21,7 @@
     "@antora/cli": "^3.0.0",
     "@antora/site-generator-default": "^3.0.0",
     "@neo4j-antora/antora-modify-sitemaps": "^0.3.3",
-    "@neo4j-documentation/link-checker": "github:neo4j-documentation/link-checker#v0.1.0"
+    "@recrwplay/link-checker": "github:recrwplay/link-checker#v0.1.1"
   },
   "watch": {
     "build": {

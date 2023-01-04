@@ -9,12 +9,14 @@ jobs:
   vale:
     name: Vale
     runs-on: ubuntu-latest
-    if: success() || failure()
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/lint/vale
+      - uses: errata-ai/vale-action@reviewdog
         with:
-          git-token: ${{ secrets.GITHUB_TOKEN }}
+          files: 'modules/ROOT/pages'
+          reporter: github-pr-check
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
        
   build-verify-deploy:

@@ -2,5 +2,3 @@
 
 Introduction
 
-link:https://www.theguardian.com[Guardian News]
-link:./fail[Fail]

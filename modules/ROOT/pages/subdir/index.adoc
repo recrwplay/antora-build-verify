@@ -2,4 +2,4 @@
 
 ## A link to a page a level up
 
-link:../link-target[Link targets]
+// link:../link-target[Link targets]

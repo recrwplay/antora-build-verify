@@ -2,4 +2,19 @@
 
 Introduction
 
-link:./link-target[Link targets]
+## Valid local link
+
+Generally this should be an `xref:` anyway.
+
+link:../link-target[Link targets]
+
+
+## Valid external link
+
+link:{neo4j-docs-base-uri}/getting-started/current/get-started-with-neo4j/[Getting Started]
+
+
+// ## Invalid external link
+
+// link:https://neo4j.com/docs/getting-started/current/get-started-with-neo4j-oops/[Getting Started]
+

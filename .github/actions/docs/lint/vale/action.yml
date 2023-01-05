@@ -20,4 +20,4 @@ runs:
         files: ${{ inputs.files-to-check }}
         reporter: github-pr-check
       env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        GITHUB_TOKEN: ${{ inputs.git-token }}

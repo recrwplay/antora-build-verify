@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/docs/lint/vale
+      - uses: errata-ai/vale-action@reviewdog
         with:
           files-to-check: ${{ needs.set-outputs.outputs.pages-partials }}
           reporter: github-pr-check

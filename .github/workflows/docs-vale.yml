@@ -33,11 +33,12 @@ jobs:
         run: |
           valefiles="$(gh pr view ${{ github.event.number }} --json files --jq 'map(.[] | select(.path | test("modules/ROOT/(pages|partials)"; "i") ) | .path) ')"
           echo "$valefiles"
+          echo "vale-files=$valefiles" >> $GITHUB_OUTPUT      
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - uses: errata-ai/vale-action@reviewdog
         with:
-          files: ${{ valefiles }}
+          files: ${{ steps.get-pages-partials.outputs.vale-files }}
           reporter: github-pr-check
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

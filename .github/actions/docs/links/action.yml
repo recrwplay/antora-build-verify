@@ -11,4 +11,4 @@ runs:
   using: "composite"
   steps: 
     
-    - run: npm run check-links
+    - run: npm run check-links-diff

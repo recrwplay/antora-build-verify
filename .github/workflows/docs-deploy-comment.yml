@@ -1,0 +1,66 @@
+# This is an example of the docs-build-verify.yml workflow available from the recrwplay org
+name: "deploy comment"
+
+on:
+  workflow_run:
+    workflows: ["Deploy docs preview"]
+    types:
+      - completed
+
+jobs:
+
+  set-outputs:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      deploy-id: ${{ github.event.number }}
+      deploy-url: ${{ steps.get-deploy-url.outputs.deploy-url }}
+    steps:
+      - id: get-deploy-url
+        run: |
+          deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
+          echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT      
+        
+  save-changes:
+    needs: set-outputs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PR branch
+        uses: actions/checkout@v3
+        
+      - name: Read antora component name
+        id: antora-component-name
+        uses: jbutcher5/read-yaml@main
+        with:
+          file: './antora.yml'
+          key-path: '["name"]'
+
+      - name: Read antora component version
+        id: antora-component-version
+        uses: jbutcher5/read-yaml@main
+        with:
+          file: './antora.yml'
+          key-path: '["version"]'
+
+      - name: Comment preamble
+        run: |
+          echo "This PR contains docs changes
+          
+          You can review the changes at https://${{ needs.set-outputs.outputs.deploy-url }}
+
+          Changed files:
+          " > changelog
+                  
+      - name: Add changed files
+        run: |
+          gh pr view ${{ github.event.number }} --json files --jq \
+          'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "- [\(.f)](https://${{ needs.set-outputs.outputs.deploy-url }}/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\(.f))" ) ) ) ' \
+          | npx pino-pretty >> changelog
+        env:
+          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+
+      - name: Add deploy comment
+        run: |
+          gh pr comment  ${{ steps.get-deploy-id.outputs.deploy-id }} --body-file changelog --edit-last
+        env:
+          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}       

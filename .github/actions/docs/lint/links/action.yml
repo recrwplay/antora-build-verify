@@ -13,10 +13,6 @@ inputs:
     description: 'head branch'
     type: string
     required: true
-  surge-deploy-url:
-    description: 'surge url'
-    type: string
-    required: true
   files-to-check:
     description: 'filename for list of files to check'
     type: string
@@ -66,15 +62,5 @@ runs:
     - run: npm install
       shell: bash
       
-    - run: npm run check-links
+    - run: npm run check-links-diff
       shell: bash
-
-    # check the files
-
-    # - run: npm run start
-    #   shell: bash
-
-    # - name: use linkcheck
-    #   uses: filiph/linkcheck@v2.0.15+1
-    #   with:
-    #     arguments: '-i${{ inputs.files-to-check }}'

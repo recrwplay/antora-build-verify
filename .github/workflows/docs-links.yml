@@ -1,0 +1,24 @@
+# This is an example of the docs-build-verify.yml workflow available from the recrwplay org
+name: "Verify docs PR links"
+
+on:
+  pull_request:
+
+jobs:
+       
+  build-verify-deploy:
+    name: Verify links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - id: link-checker
+        name: Run link-checker
+        uses: ./.github/actions/docs/lint/links
+        with:
+          git-token: ${{ secrets.PR_COMMENT_TOKEN }}
+          base: ${{ github.base_ref }}
+          head: ${{ github.head_ref }}

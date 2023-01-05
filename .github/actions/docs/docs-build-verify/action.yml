@@ -1,4 +1,4 @@
-name: 'Build and deploy docs pr'
+name: 'Build and verify docs'
 description: 'Builds and verifies docs'
 
 inputs:
@@ -15,15 +15,6 @@ inputs:
     required: true
     type: number
     default: 7
-  surge-deploy-id:
-    description: 'The PR number if called by a PR'
-    required: true
-    type: string
-    default: 'na'
-  surge-deploy-url:
-    description: 'The surge.sh URL'
-    required: true
-    type: string
 
 
 # outputs:
@@ -42,24 +33,13 @@ runs:
 
     # build
 
-    - uses: ./.github/actions/build
+    - uses: ./.github/actions/docs/build
       with:
         package-script: ${{ inputs.package-script }}
 
 
     # verify
 
-    - uses: ./.github/actions/verify
+    - uses: ./.github/actions/docs/verify
       with:
         failOnWarnings: ${{ inputs.fail-on-warnings }}
-
-    # check links
-
-    # - uses: ./.github/actions/lint/links
-    #   with:
-    #     # git-token: ${{ secrets.PR_COMMENT_TOKEN }}
-    #     surge-deploy-url: '${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}'
-    #     base: ${{ github.base_ref }}
-    #     head: ${{ github.head_ref }}
-
-

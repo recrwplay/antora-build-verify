@@ -1,0 +1,26 @@
+# This is an example of the docs-build-verify.yml workflow available from the recrwplay org
+name: "Vale"
+
+on:
+  pull_request:
+
+jobs:
+
+  vale:
+    name: runner / vale
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+
+
+
+
+
+
+      - uses: errata-ai/vale-action@reviewdog
+        with:
+          files: 'modules/ROOT/pages'
+          reporter: github-pr-check
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

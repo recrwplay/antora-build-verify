@@ -34,16 +34,15 @@ jobs:
     needs: build-verify
     runs-on: ubuntu-latest
     steps:
-
-      - name: Download Antora log
+      - name: Download Antora output
         uses: actions/download-artifact@v3
         with:
           name: docs
           path: build/
 
-      -run: npm install github:recrwplay/link-checker#v0.1.1  
+      - run: npm install github:recrwplay/link-checker#v0.1.1  
 
-      -run: npm run check-links-publish
+      - run: npm run check-links-publish
       
 
 

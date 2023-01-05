@@ -37,7 +37,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - uses: errata-ai/vale-action@reviewdog
         with:
-          files: $valefiles
+          files: ${{ valefiles }}
           reporter: github-pr-check
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

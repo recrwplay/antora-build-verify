@@ -46,7 +46,7 @@ jobs:
       
 
 
-  vale:
-    name: Vale
-    uses: ./.github/actions/docs/lint/vale
+  # vale:
+  #   name: Vale
+  #   uses: ./.github/actions/docs/lint/vale
 

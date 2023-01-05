@@ -18,6 +18,7 @@ jobs:
       - id: get-pages-partials
         run: |
           valefiles="$(gh pr view ${{ github.event.number }} --json files --jq 'map(.[] | select(.path | test("modules/ROOT/(pages|partials)"; "i") ) | .path) ')"
+          echo "$valefiles"
           echo "pages-partials=$valefiles" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -29,7 +30,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/docs/lint/vale
         with:
-          files: ${{ needs.set-outputs.outputs.pages-partials }}
+          files-to-check: ${{ needs.set-outputs.outputs.pages-partials }}
           reporter: github-pr-check
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

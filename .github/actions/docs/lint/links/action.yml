@@ -2,9 +2,6 @@ name: 'Check new links'
 description: 'Check new links in the deployed docs'
 
 inputs:
-  git-token:
-    description: 'a token for git commands'
-    required: true
   base:
     description: 'base branch'
     type: string

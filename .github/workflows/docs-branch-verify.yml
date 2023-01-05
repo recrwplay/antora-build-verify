@@ -40,47 +40,14 @@ jobs:
         with:
           name: docs
           path: build/
+
+      -run: npm install github:recrwplay/link-checker#v0.1.1  
+
+      -run: npm run check-links-publish
       
-    #   if: success() || failure() && contains( github.event.pull_request.labels.*.name, 'check-links')
-    #   name: Check links
-      #   run: npm run check-links
 
 
-      # lint tests - new links
-
-      # - id: lint
-      #   name: Lint
-      #   if: success() || failure()
-      #   uses: ./.github/actions/docs/lint/links
-      #   with:
-      #     git-token: ${{ secrets.PR_COMMENT_TOKEN }}
-      #     surge-deploy-url: '${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}'
-      #     base: ${{ github.base_ref }}
-      #     head: ${{ github.head_ref }}
-
-      # - id: vale
-      #   name: Vale
-      #   if: success() || failure()
-      #   uses: ./.github/actions/docs/lint/vale
-      #   with:
-      #     git-token: ${{ secrets.PR_COMMENT_TOKEN }}
-      #     surge-deploy-url: '${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}'
-      #     base: ${{ github.base_ref }}
-      #     head: ${{ github.head_ref }}
-      # - id: deploy
-      #   name: Deploy to surge
-      #   run: |
-      #     npm install -g surge
-      #     deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
-      #     surge ./build/site $deployurl --token ${{ secrets.SURGE_TOKEN }}
-
-
-
-        # uses: ./.github/actions/docs/deploy
-        # with:
-        #   surge-tokem: ${{ secrets.SURGE_TOKEN }}
-        #   surge-deploy-url: ${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
-
-
-
+  vale:
+    name: Vale
+    uses: ./.github/actions/docs/lint/vale
 

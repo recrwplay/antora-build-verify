@@ -8,8 +8,7 @@ inputs:
   files-to-check:
     description: 'files to check'
     type: string
-    default: 'modules/ROOT/pages'
-    required: true
+    default: '["modules/ROOT/pages", "modules/ROOT/partials"]'
 
 jobs:
   vale:
@@ -22,6 +21,4 @@ jobs:
           files: ${{ inputs.files-to-check }}
           reporter: github-pr-check
         env:
-          # Required, set by GitHub actions automatically:
-          # https://docs.github.com/en/actions/security-guides/automatic-token-authentication#about-the-github_token-secret
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

@@ -1,4 +1,4 @@
-# This is an example of the docs-build-verify.yml workflow available from the recrwplay org
+# This is an example of the docs-pr.yml workflow available from the recrwplay org
 name: "Vale"
 
 on:
@@ -6,21 +6,25 @@ on:
 
 jobs:
 
+  set-outputs:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      pages-partials: ${{ steps.get-pages-partials.outputs.pages-partials }}
+    steps:
+      - id: get-pages-partials
+        run: |
+          valefiles=gh pr view ${{ github.event.number }} --json files --jq 'map(.[] | select(.path | test("modules/ROOT/(pages|partials)"; "i") ) | .path) '
+          echo "pages-partials=$valefiles" >> $GITHUB_OUTPUT
+
   vale:
     name: runner / vale
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-
-
-
-
-
-
-      - uses: errata-ai/vale-action@reviewdog
+      - uses: ./.github/actions/docs/lint/vale
         with:
-          files: 'modules/ROOT/pages'
+          files: ${{ needs.set-outputs.outputs.pages-partials }}
           reporter: github-pr-check
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

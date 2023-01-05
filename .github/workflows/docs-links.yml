@@ -1,5 +1,5 @@
-# This is an example of the docs-build-verify.yml workflow available from the recrwplay org
-name: "Verify docs PR links"
+# This is an example of the docs-pr.yml workflow available from the recrwplay org
+name: "Verify PR links"
 
 on:
   pull_request:
@@ -20,5 +20,6 @@ jobs:
         uses: ./.github/actions/docs/lint/links
         with:
           git-token: ${{ secrets.PR_COMMENT_TOKEN }}
+          surge-deploy-url: '${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}'
           base: ${{ github.base_ref }}
           head: ${{ github.head_ref }}

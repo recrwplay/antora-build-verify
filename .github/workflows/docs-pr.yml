@@ -6,26 +6,6 @@ on:
 
 jobs:
 
-  # deploy-comment:
-  #   name: Generate deploy comment text
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Check out PR branch
-  #       uses: actions/checkout@v3
-        
-
-  set-deploy-outputs:
-    runs-on: ubuntu-latest
-    # Map a step output to a job output
-    outputs:
-      deploy-id: ${{ github.event.number }}
-      deploy-url: ${{ steps.get-deploy-url.outputs.deploy-url }}
-    steps:
-      - id: get-deploy-url
-        run: |
-          deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
-          echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT      
-       
   build-verify:
     name: Verify Antora log
     runs-on: ubuntu-latest
@@ -60,11 +40,16 @@ jobs:
           file: './antora.yml'
           key-path: '["version"]'
 
+      - id: get-deploy-url
+        run: |
+          deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
+          echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT      
+
       - name: Comment preamble
         run: |
           echo "This PR contains docs changes
           
-          You can review the changes at https://${{ needs.set-deploy-outputs.outputs.deploy-url }}
+          You can review the changes at https://${{ steps.get-deploy-url.outputs.deploy-url }}
 
           Changed files:
           " > deploy-comment
@@ -72,7 +57,7 @@ jobs:
       - name: Add changed files to comment text
         run: |
           gh pr view ${{ github.event.number }} --json files --jq \
-          'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "- [\(.f)](https://${{ needs.set-deploy-outputs.outputs.deploy-url }}/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\(.f))" ) ) ) ' \
+          'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "- [\(.f)](https://${{ steps.get-deploy-url.outputs.deploy-url }}/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\(.f))" ) ) ) ' \
           | npx pino-pretty >> changelog
         env:
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}

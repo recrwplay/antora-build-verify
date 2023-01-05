@@ -10,15 +10,14 @@ inputs:
     type: string
     default: '["modules/ROOT/pages", "modules/ROOT/partials"]'
 
-jobs:
-  vale:
-    name: runner / vale
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: errata-ai/vale-action@reviewdog
-        with:
-          files: ${{ inputs.files-to-check }}
-          reporter: github-pr-check
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+runs:
+  using: "composite"
+  steps: 
+    - uses: actions/checkout@v3
+    - uses: errata-ai/vale-action@reviewdog
+      with:
+        files: ${{ inputs.files-to-check }}
+        reporter: github-pr-check
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

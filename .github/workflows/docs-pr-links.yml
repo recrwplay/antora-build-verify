@@ -58,6 +58,7 @@ jobs:
 
   check-links:
     name: Check links
+    runs-on: ubuntu-latest
     if: ${{ needs.get-diff.outputs.link-count > 0 }}
     steps:
       - uses: actions/checkout@v3

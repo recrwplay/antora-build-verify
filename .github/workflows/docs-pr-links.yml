@@ -52,7 +52,7 @@ jobs:
       - name: Save diff output as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: docs
+          name: diff
           path: diff-links.txt
 
     outputs:
@@ -65,6 +65,10 @@ jobs:
     if: ${{ needs.get-diff.outputs.link-count > 0 }}
     steps:
       - uses: actions/checkout@v3
+      - name: Download Antora log
+        uses: actions/download-artifact@v3
+        with:
+          name: diff
       - run: npm install
       # - run: npm run check-links-diff
       - run: npm run build

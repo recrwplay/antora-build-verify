@@ -26,33 +26,31 @@ on:
 
 jobs:
 
-  # build and verify
-  docs-build-verify:
-    name: Verify Antora log
+  docs-build-for-pr:
+    name: Generate HTML
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@main
+    with:
+      deploy-id: ${{ github.event.number }}
+      retain-artifacts: 14
+
+  docs-verify-for-pr:
+    name: Analyze Antora log
+    needs: docs-build-for-pr
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@main
+    with:
+      failOnWarnings: true
+
+  # create deploy comment
+  deploy-comment:
+    needs: docs-build-for-pr
+    name: Create deploy comment
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-
-      - id: generate-html
-        name: Generate HTML
-        uses: ./.github/actions/docs/build-verify
-        with:
-          package-script: 'build-verify'
-          fail-on-warnings: true
-          deploy-id: ${{ github.event.number }}
-
-  antora-component:
-    name: Read antora component details
-    runs-on: ubuntu-latest
-    outputs:
-      antora-component-name: ${{ steps.antora-component-name.outputs.data }}
-      antora-component-version: ${{ steps.antora-component-version.outputs.data }}
-    steps:
-
-      - uses: actions/checkout@v3
 
       - id: antora-component-name
         name: Read antora component name
@@ -67,17 +65,6 @@ jobs:
         with:
           file: './antora.yml'
           key-path: '["version"]'
-
-  # create deploy comment
-  deploy-comment:
-    name: Create deploy comment
-    runs-on: ubuntu-latest
-    steps:
-
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
 
       - id: get-deploy-url
         run: |
@@ -96,7 +83,7 @@ jobs:
       - name: Add changed files to comment text
         run: |
           gh pr view ${{ github.event.number }} --json files --jq \
-          'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "- [\(.f)](https://${{ steps.get-deploy-url.outputs.deploy-url }}/${{ needs.antora-component.outputs.antora-component-name }}/${{ needs.antora-component.outputs.antora-component-version }}/\(.f))" ) ) ) ' \
+          'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "- [\(.f)](https://${{ steps.get-deploy-url.outputs.deploy-url }}/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\(.f))" ) ) ) ' \
           | npx pino-pretty >> deploy-comment
         env:
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}

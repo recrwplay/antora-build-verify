@@ -1,0 +1,12 @@
+# Link target
+
+Targets for links
+
+[.link-here]
+## You can link here
+
+Lorem ipsum
+
+## Second heading
+
+Dolor sit est

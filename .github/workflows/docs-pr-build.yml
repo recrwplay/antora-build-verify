@@ -1,0 +1,107 @@
+# docs-pr-build.yml
+
+# 1. Builds and verifies the asciidoc source.
+  # Builds by using Antora to generate the HTML.
+  # Stores the Antora log as a JSON file.
+  # Analyses the Antora log and outputs warnings and errors as annotations
+
+# 2. Generates the text for a comment to be added to a PR when the docs are deployed to surge.sh
+  # The comment contains a link to the deployed docs and a list of links to the changed files
+  # The comment is saved as a file in the 'docs' artifact
+  # The comment is added to the PR by the docs-pr-deploy job
+
+name: "Documentation PR Build"
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+    # paths:
+    #   - antora.yml
+    #   - preview.yml
+    #   - publish.yml
+    #   - package.json
+    #   - "modules/**"
+
+jobs:
+
+  # build and verify
+  docs-build-verify:
+    name: Verify Antora log
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - id: build-verify
+        name: Build and verify
+        uses: ./.github/actions/docs/build-verify
+        with:
+          package-script: 'build-verify'
+          fail-on-warnings: true
+
+  antora-component:
+    name: Read antora component details
+    runs-on: ubuntu-latest
+    outputs:
+      antora-component-name: ${{ steps.antora-component-name.outputs.data }}
+      antora-component-version: ${{ steps.antora-component-version.outputs.data }}
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - id: antora-component-name
+        name: Read antora component name
+        uses: jbutcher5/read-yaml@main
+        with:
+          file: './antora.yml'
+          key-path: '["name"]'
+
+      - id: antora-component-version
+        name: Read antora component version
+        uses: jbutcher5/read-yaml@main
+        with:
+          file: './antora.yml'
+          key-path: '["version"]'
+
+  # create deploy comment
+  deploy-comment:
+    name: Create deploy comment
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - id: get-deploy-url
+        run: |
+          deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
+          echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT      
+
+      - name: Comment preamble
+        run: |
+          echo "This PR contains docs changes
+          
+          You can review the changes at https://${{ steps.get-deploy-url.outputs.deploy-url }}
+
+          Changed files:
+          " > deploy-comment
+                  
+      - name: Add changed files to comment text
+        run: |
+          gh pr view ${{ github.event.number }} --json files --jq \
+          'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "- [\(.f)](https://${{ steps.get-deploy-url.outputs.deploy-url }}/${{ needs.antora-component.outputs.antora-component-name }}/${{ needs.antora-component.outputs.antora-component-version }}/\(.f))" ) ) ) ' \
+          | npx pino-pretty >> deploy-comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+
+      - name: Save comment text as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs
+          path: deploy-comment

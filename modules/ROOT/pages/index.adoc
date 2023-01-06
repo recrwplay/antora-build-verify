@@ -1,15 +1,28 @@
-# Antora and github actions tests
-:no-attribute: 'an attribute'
-Just testing workflows, actions, annotations.
+# Antora and Github actions tests
+:an-attribute: 'an attribute'
+:description: Just testing workflows, actions, annotations.
 
 ## Content to generate xrefs and warnings
 
 include::partial$include-target.adoc[]
 
-I have {no-attribute} that I can use here.
+You can use {an-attribute} here.
 
-This sentence has been added to see if the pr comment is repeated or updated.
+This branch contains changes to test inputs when building from a PR.
 
-This branch contains a change to test inputs when building from a PR.
+link:./link-target[Link targets]
 
-// yes
+## Vocabulary
+
+You use a vocabulary to test accepted and rejected words.
+It is fine to talk about clusters, but not about a causal cluster.
+You should not mention casual clusters whatever you do.
+
+## Commas
+
+Ths is a sentence with a comma, and then another comma, and more commas follow, which is maybe too many, or maybe not.
+I will be the judge of how bad this writing is.
+The close window dialog will open.
+Click on the button to close the window.
+The window will close.
+The database will stop

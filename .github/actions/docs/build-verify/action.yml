@@ -1,0 +1,45 @@
+name: 'Build and verify docs'
+description: 'Builds and verifies docs'
+
+inputs:
+  package-script:
+    description: 'The name of the script to run in package.json '
+    type: string
+    default: 'build-verify'
+  fail-on-warnings:
+    description: 'Fail the Antora verification if the log contains warnings'
+    type: boolean
+    default: false
+  retain-artifacts:
+    description: 'The number of days to retain artifacts'
+    required: true
+    type: number
+    default: 7
+
+
+# outputs:
+#   copied-files: 
+#     description: "Number of files copied"
+#     value: ${{ steps.random-number-generator.outputs.filesNo }}
+
+runs:
+  using: "composite"
+  steps: 
+
+    # checkout
+    
+    - uses: actions/checkout@v3
+
+
+    # build
+
+    - uses: ./.github/actions/docs/build
+      with:
+        package-script: ${{ inputs.package-script }}
+
+
+    # verify
+
+    - uses: ./.github/actions/docs/verify
+      with:
+        failOnWarnings: ${{ inputs.fail-on-warnings }}

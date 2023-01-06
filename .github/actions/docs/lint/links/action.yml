@@ -1,0 +1,63 @@
+name: 'Check new links'
+description: 'Check new links in the deployed docs'
+
+inputs:
+  base:
+    description: 'base branch'
+    type: string
+    required: true
+  head:
+    description: 'head branch'
+    type: string
+    required: true
+  files-to-check:
+    description: 'filename for list of files to check'
+    type: string
+    default: 'links.txt'
+
+runs:
+  using: "composite"
+  steps: 
+    
+    # get antora component and version 
+    
+    # turn this into a matrix to get all **/antora.yml files for eg drivers or docs in subdirs
+    # no way to matrix at this point though so will need to do it another way. Probably a js action.
+    
+    - name: Read antora component name
+      id: antora-component-name
+      uses: jbutcher5/read-yaml@main
+      with:
+        file: './antora.yml'
+        key-path: '["name"]'
+
+    - name: Read antora component version
+      id: antora-component-version
+      uses: jbutcher5/read-yaml@main
+      with:
+        file: './antora.yml'
+        key-path: '["version"]'
+
+
+    # get files with link: from the diff
+
+    - run: git fetch origin ${{ inputs.base }}
+      shell: bash
+
+    - run: 'git diff origin/${{ inputs.base }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*?)(index)?\.adoc/) { print \"localhost:8000/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > ${{ inputs.files-to-check }}'
+      shell: bash
+
+
+    # upload result
+
+    - name: Upload diff output
+      uses: actions/upload-artifact@v3
+      with:
+        name: docs
+        path: ${{ inputs.files-to-check }}
+
+    - run: npm install
+      shell: bash
+      
+    - run: npm run check-links-diff
+      shell: bash

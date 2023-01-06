@@ -1,0 +1,14 @@
+name: 'Check new links'
+description: 'Check new links in the deployed docs'
+
+inputs:
+  do-check:
+    description: 'check new links'
+    type: boolean
+    default: true
+
+runs:
+  using: "composite"
+  steps: 
+    
+    - run: npm run check-links-diff

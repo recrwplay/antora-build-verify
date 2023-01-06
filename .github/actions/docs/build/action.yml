@@ -1,0 +1,40 @@
+name: 'Build docs'
+description: 'Builds docs'
+
+inputs:
+  package-script:
+    description: 'The name of the script to run in package.json '
+    type: string
+    default: 'build-verify'
+  retain-artifacts:
+    description: 'The number of days to retain artifacts'
+    required: true
+    type: number
+    default: 7
+
+runs:
+  using: "composite"
+  steps: 
+
+  - uses: actions/setup-node@v3
+    with:
+      node-version: '16'
+
+  - run: npm install --omit=dev
+    shell: bash
+  - run: npm run ${{ inputs.package-script }}
+    shell: bash
+
+  - name: Upload HTML artifact
+    uses: actions/upload-artifact@v3
+    with:
+      name: docs
+      path: build/
+      retention-days: ${{ inputs.retain-artifacts }}          
+
+  - name: Upload Log artifact
+    uses: actions/upload-artifact@v3
+    with:
+      name: antora-log
+      path: build/log
+      retention-days: ${{ inputs.retain-artifacts }}

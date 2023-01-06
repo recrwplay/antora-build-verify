@@ -1,0 +1,31 @@
+# Documentation Style Guide Lint
+# Uses Vale to lint documentation against the Documentation Style Guide
+# Current POC uses the Google style guide as a base set of rules
+# See .vale.ini for the current set of rules
+
+name: "Documentation Style Guide Lint"
+
+on:
+  pull_request:
+
+jobs:
+
+  vale:
+    name: Lint with Vale
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - id: get-pages-partials
+        run: |
+          valefiles="$(gh pr view ${{ github.event.number }} --json files --jq 'map(.[] | select(.path | test("modules/ROOT/(pages|partials)"; "i") ) | .path) ')"
+          echo "$valefiles"
+          echo "vale-files=$valefiles" >> $GITHUB_OUTPUT      
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - uses: errata-ai/vale-action@reviewdog
+        with:
+          files: ${{ steps.get-pages-partials.outputs.vale-files }}
+          reporter: github-pr-check
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

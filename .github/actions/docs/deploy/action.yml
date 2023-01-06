@@ -1,0 +1,23 @@
+name: 'Deploy docs pr'
+description: 'Deploys docs to surge'
+
+inputs:
+  surge-deploy-url:
+    description: 'The surge.sh URL'
+    required: true
+    type: string
+  surge-token:
+    description: 'The surge.sh token'
+    required: true
+
+runs:
+  using: "composite"
+  steps: 
+
+  - run: npm install -g surge
+    shell: bash
+  - run: surge ./build/site ${{ inputs.surge-deploy-url }} --token ${{ inputs.surge-token }}
+    shell: bash
+  - run: echo "Docs published to [${{ inputs.surge-deploy-url }}](https://${{ inputs.surge-deploy-url }})" >> $GITHUB_STEP_SUMMARY
+    shell: bash
+

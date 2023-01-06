@@ -15,6 +15,12 @@ inputs:
     required: true
     type: number
     default: 7
+  deploy-id:
+    description: 'An id if the output is to be deployed'
+    required: true
+    type: string
+    default: 'id-'
+
 
 
 # outputs:
@@ -36,6 +42,7 @@ runs:
     - uses: ./.github/actions/docs/build
       with:
         package-script: ${{ inputs.package-script }}
+        deploy-id: ${{ inputs.deploy-id }}
 
 
     # verify

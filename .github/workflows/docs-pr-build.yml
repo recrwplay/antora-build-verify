@@ -42,6 +42,7 @@ jobs:
         with:
           package-script: 'build-verify'
           fail-on-warnings: true
+          deploy-id: ${{ github.event.number }}
 
   antora-component:
     name: Read antora component details

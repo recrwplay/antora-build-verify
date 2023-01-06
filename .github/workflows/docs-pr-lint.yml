@@ -23,7 +23,10 @@ jobs:
           echo "vale-files=$valefiles" >> $GITHUB_OUTPUT      
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - uses: errata-ai/vale-action@reviewdog
+      
+      - name: Run Vale action
+        if: steps.get-pages-partials.outputs.vale-files != '[]'
+        uses: errata-ai/vale-action@reviewdog
         with:
           files: ${{ steps.get-pages-partials.outputs.vale-files }}
           reporter: github-pr-check

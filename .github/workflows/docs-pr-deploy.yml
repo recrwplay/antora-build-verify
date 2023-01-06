@@ -7,7 +7,6 @@
 # - update the reference to "docs" and "docs.zip" in this workflow if your triggering workflow generates an artifact with a different name
 
 name: "Documentation PR Deploy"
-description: "Deploys preview docs for a PR to surge.sh"
 
 on:
   workflow_run:

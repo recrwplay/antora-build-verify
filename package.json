@@ -11,7 +11,7 @@
     "publish": "antora publish.yml --stacktrace --log-format=pretty",
     "build-verify": "antora --stacktrace --fetch preview.yml --log-format=json --log-level=info --log-file ./build/log/log.json",
     "publish-verify": "antora --stacktrace --fetch publish.yml --log-format=json --log-file ./build/log/log.json",
-    "check-links-diff": "npm run build && link-checker build/site --do-file links.txt --skip-file scripts/ignore-links.txt",
+    "check-links-diff": "npm run build && link-checker build/site --do-file diff-links.txt --skip-file scripts/ignore-links.txt",
     "check-links-publish": "link-checker build/site --skip-file scripts/ignore-links.txt"
   },
   "keywords": [

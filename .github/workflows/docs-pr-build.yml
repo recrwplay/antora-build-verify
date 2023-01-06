@@ -1,11 +1,32 @@
-# This is an example of the docs-build-verify.yml workflow available from the recrwplay org
-name: "Verify docs PR"
+# docs-pr-build.yml
+
+# 1. Builds and verifies the asciidoc source.
+  # Builds by using Antora to generate the HTML.
+  # Stores the Antora log as a JSON file.
+  # Analyses the Antora log and outputs warnings and errors as annotations
+
+# 2. Generates the text for a comment to be added to a PR when the docs are deployed to surge.sh
+  # The comment contains a link to the deployed docs and a list of links to the changed files
+  # The comment is saved as a file in the 'docs' artifact
+  # The comment is added to the PR by the docs-pr-deploy job
+
+name: "Documentation PR Build"
 
 on:
   pull_request:
+    branches:
+      - main
+      - dev
+    # paths:
+    #   - antora.yml
+    #   - preview.yml
+    #   - publish.yml
+    #   - package.json
+    #   - "modules/**"
 
 jobs:
 
+  # build and verify
   build-verify:
     name: Verify Antora log
     runs-on: ubuntu-latest
@@ -15,8 +36,6 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
-      # build and verify
-
       - id: docs-build-verify
         name: Build and verify
         uses: ./.github/actions/docs/docs-build-verify
@@ -24,8 +43,14 @@ jobs:
           package-script: 'build-verify'
           fail-on-warnings: true
 
-      # create deploy comment
-
+  antora-component:
+    name: Read antora component details
+    runs-on: ubuntu-latest
+    outputs:
+      antora-component-name: ${{ steps.antora-component-name.outputs.data }}
+      antora-component-version: ${{ steps.antora-component-version.outputs.data }}
+    steps:
+    
       - id: antora-component-name
         name: Read antora component name
         uses: jbutcher5/read-yaml@main
@@ -39,6 +64,12 @@ jobs:
         with:
           file: './antora.yml'
           key-path: '["version"]'
+
+  # create deploy comment
+  deploy-comment:
+    name: Verify Antora log
+    runs-on: ubuntu-latest
+    steps:
 
       - id: get-deploy-url
         run: |
@@ -57,8 +88,8 @@ jobs:
       - name: Add changed files to comment text
         run: |
           gh pr view ${{ github.event.number }} --json files --jq \
-          'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "- [\(.f)](https://${{ steps.get-deploy-url.outputs.deploy-url }}/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\(.f))" ) ) ) ' \
-          | npx pino-pretty >> changelog
+          'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "- [\(.f)](https://${{ steps.get-deploy-url.outputs.deploy-url }}/${{ needs.antora-component.outputs.antora-component-name }}/${{ needs.antora-component.outputs.antora-component-version }}/\(.f))" ) ) ) ' \
+          | npx pino-pretty >> deploy-comment
         env:
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
 

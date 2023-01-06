@@ -1,5 +1,9 @@
-# This is an example of the docs-pr.yml workflow available from the recrwplay org
-name: "Vale"
+# Documentation Style Guide Lint
+# Uses Vale to lint documentation against the Documentation Style Guide
+# Current POC uses the Google style guide as a base set of rules
+# See .vale.ini for the current set of rules
+
+name: "Documentation Style Guide Lint"
 
 on:
   pull_request:
@@ -7,7 +11,7 @@ on:
 jobs:
 
   vale:
-    name: runner / vale
+    name: Lint with Vale
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

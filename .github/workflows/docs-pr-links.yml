@@ -1,0 +1,41 @@
+# docs-pr-links.yml
+# 
+
+name: "Documentation PR link-checker"
+description: Runs the link checker on the PR branch to verify files that contain new or changed links
+
+on:
+  pull_request:
+
+jobs:
+
+  link-diff:
+    name: Get list of changed files where a link is in the diff
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      # get files with link: from the diff
+      - run: git fetch origin ${{ inputs.base }}
+        shell: bash
+
+      - run: 'git diff origin/${{ inputs.base }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*?)(index)?\.adoc/) { print \"localhost:8000/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > diff-links.txt'
+        shell: bash
+
+      # upload result
+
+      - name: Save diff output as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs
+          path: diff-links.txt
+
+      - run: npm install
+      # - run: npm run check-links-diff
+      - run: npm run build
+      - run: link-checker build/site --do-file diff-links.txt --skip-file scripts/ignore-links.txt
+       

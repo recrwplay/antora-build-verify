@@ -1,10 +1,10 @@
-# docs-build-verify.yml
+# build-verify.yml
 
 # 1. Build docs using preview.yml (which builds for the current branch)
 # 2. Check for warnings and errors in the Antora log
 # 3. Run link-checker against the branch docs
 
-# This is an example of the docs-build-verify.yml workflow available from the recrwplay org
+# This is an example of the build-verify.yml workflow available from the recrwplay org
 name: "Documentation Publish"
 
 on:
@@ -28,11 +28,9 @@ jobs:
 
       - id: build-verify
         name: Build and verify
-        uses: ./.github/actions/docs/docs-build-verify
+        uses: ./.github/actions/docs/build-verify
         with:
           package-script: 'publish-verify'
-          surge-deploy-url: '${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ GITHUB_REF_NAME	}}'
-          surge-deploy-id: '${{ GITHUB_REF_NAME	}}'
           fail-on-warnings: true
 
   # publish HTML

@@ -27,7 +27,7 @@ on:
 jobs:
 
   # build and verify
-  build-verify:
+  docs-build-verify:
     name: Verify Antora log
     runs-on: ubuntu-latest
     steps:
@@ -36,9 +36,9 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
-      - id: docs-build-verify
+      - id: build-verify
         name: Build and verify
-        uses: ./.github/actions/docs/docs-build-verify
+        uses: ./.github/actions/docs/build-verify
         with:
           package-script: 'build-verify'
           fail-on-warnings: true
@@ -105,61 +105,3 @@ jobs:
         with:
           name: docs
           path: deploy-comment
-
-          
-      # deploy
-
-      # - id: deploy
-      #   name: Deploy
-      #   if: success() || failure()
-      #   uses: ./.github/actions/docs/deploy
-      #   with:
-      #     surge-token: ${{ secrets.SURGE_TOKEN }}
-      #     surge-deploy-url: ${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
-
-      # check all links
-
-      # - id: check-links
-      #   if: success() || failure() && contains( github.event.pull_request.labels.*.name, 'check-links')
-      #   name: Check links
-      #   run: npm run check-links
-
-
-      # lint tests - new links
-
-      # - id: lint
-      #   name: Lint
-      #   if: success() || failure()
-      #   uses: ./.github/actions/docs/lint/links
-      #   with:
-      #     git-token: ${{ secrets.PR_COMMENT_TOKEN }}
-      #     surge-deploy-url: '${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}'
-      #     base: ${{ github.base_ref }}
-      #     head: ${{ github.head_ref }}
-
-      # - id: vale
-      #   name: Vale
-      #   if: success() || failure()
-      #   uses: ./.github/actions/docs/lint/vale
-      #   with:
-      #     git-token: ${{ secrets.PR_COMMENT_TOKEN }}
-      #     surge-deploy-url: '${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}'
-      #     base: ${{ github.base_ref }}
-      #     head: ${{ github.head_ref }}
-      # - id: deploy
-      #   name: Deploy to surge
-      #   run: |
-      #     npm install -g surge
-      #     deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
-      #     surge ./build/site $deployurl --token ${{ secrets.SURGE_TOKEN }}
-
-
-
-        # uses: ./.github/actions/docs/deploy
-        # with:
-        #   surge-tokem: ${{ secrets.SURGE_TOKEN }}
-        #   surge-deploy-url: ${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
-
-
-
-

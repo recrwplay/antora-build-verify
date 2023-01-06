@@ -27,7 +27,7 @@ jobs:
 
       - id: build-verify
         name: Build and verify
-        uses: ./.github/actions/docs/docs-build-verify
+        uses: ./.github/actions/docs/build-verify
         with:
           package-script: 'build-verify'
           fail-on-warnings: true

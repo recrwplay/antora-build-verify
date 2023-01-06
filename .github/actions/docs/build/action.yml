@@ -22,7 +22,12 @@ runs:
 
   - run: npm install --omit=dev
     shell: bash
+    
   - run: npm run ${{ inputs.package-script }}
+    shell: bash
+
+  - name: Save event-id
+    run: echo ${{ inputs.deploy-id }} > ./build/deployid
     shell: bash
 
   - name: Upload HTML artifact

@@ -78,17 +78,17 @@ jobs:
       # it is created by the docs-pr-build workflow
       # and is saved to the docs.zip artifact
           
-      # - name: Comment on PR (sticky)
-      #   uses: marocchino/sticky-pull-request-comment@v2
-      #   with:
-      #     number: ${{ steps.get-deploy-id.outputs.deploy-id }}
-      #     path: deploy-comment
-      #     recreate: true
-      #     GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+      - name: Comment on PR (sticky)
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          number: ${{ steps.get-deploy-id.outputs.deploy-id }}
+          path: deploy-comment
+          recreate: true
+          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
 
    
-      - name: Add deploy comment
-        run: |
-          gh pr comment  ${{ steps.get-deploy-id.outputs.deploy-id }} --body-file deploy-comment --edit-last
-        env:
-          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}      
+      # - name: Add deploy comment
+      #   run: |
+      #     gh pr comment  ${{ steps.get-deploy-id.outputs.deploy-id }} --body-file deploy-comment --edit-last
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}      

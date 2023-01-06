@@ -8,8 +8,8 @@ on:
 
 jobs:
 
-  link-diff:
-    name: Verify updated or new links
+  get-diff:
+    name: List files containing new and changed links
     runs-on: ubuntu-latest
     steps:
 
@@ -37,6 +37,11 @@ jobs:
       - run: git fetch origin ${{ github.base_ref }}
         shell: bash
 
+      - id: link-count
+        run: |
+          linkcount='git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | wc -l'
+          echo "link-count=$linkcount" >> $GITHUB_OUTPUT    
+
       - run: 'git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*?)(index)?\.adoc/) { print \"localhost:8000/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > diff-links.txt'
         shell: bash
 
@@ -48,6 +53,14 @@ jobs:
           name: docs
           path: diff-links.txt
 
+    outputs:
+      link-count: ${{ steps.link-count.outputs.link-count }}
+
+  check-links:
+    name: Check links
+    if: ${{ needs.get-diff.outputs.link-count > 0 }}
+    steps:
+      - uses: actions/checkout@v3
       - run: npm install
       # - run: npm run check-links-diff
       - run: npm run build

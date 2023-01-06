@@ -39,7 +39,7 @@ jobs:
 
       - id: link-count
         run: |
-          linkcount="git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | wc -l"
+          linkcount="$(git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | wc -l)"
           echo "$linkcount"
           echo "link-count=$linkcount" >> $GITHUB_OUTPUT
 

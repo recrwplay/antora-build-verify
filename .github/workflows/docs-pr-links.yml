@@ -18,11 +18,26 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
+
+      - id: antora-component-name
+        name: Read antora component name
+        uses: jbutcher5/read-yaml@main
+        with:
+          file: './antora.yml'
+          key-path: '["name"]'
+
+      - id: antora-component-version
+        name: Read antora component version
+        uses: jbutcher5/read-yaml@main
+        with:
+          file: './antora.yml'
+          key-path: '["version"]'
+          
       # get files with link: from the diff
-      - run: git fetch origin ${{ inputs.base }}
+      - run: git fetch origin ${{ github.base_ref }}
         shell: bash
 
-      - run: 'git diff origin/${{ inputs.base }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*?)(index)?\.adoc/) { print \"localhost:8000/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > diff-links.txt'
+      - run: 'git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*?)(index)?\.adoc/) { print \"localhost:8000/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > diff-links.txt'
         shell: bash
 
       # upload result

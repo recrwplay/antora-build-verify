@@ -50,7 +50,9 @@ jobs:
       antora-component-name: ${{ steps.antora-component-name.outputs.data }}
       antora-component-version: ${{ steps.antora-component-version.outputs.data }}
     steps:
-    
+
+      - uses: actions/checkout@v3
+
       - id: antora-component-name
         name: Read antora component name
         uses: jbutcher5/read-yaml@main
@@ -67,9 +69,14 @@ jobs:
 
   # create deploy comment
   deploy-comment:
-    name: Verify Antora log
+    name: Create deploy comment
     runs-on: ubuntu-latest
     steps:
+
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
 
       - id: get-deploy-url
         run: |
@@ -94,7 +101,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
 
       - name: Save comment text as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: docs
           path: deploy-comment

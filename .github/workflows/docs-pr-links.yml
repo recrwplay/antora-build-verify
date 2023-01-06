@@ -1,8 +1,7 @@
 # docs-pr-links.yml
-# 
+# Runs the link checker on the PR branch to verify files that contain new or changed links
 
 name: "Documentation PR link-checker"
-description: Runs the link checker on the PR branch to verify files that contain new or changed links
 
 on:
   pull_request:

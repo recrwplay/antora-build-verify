@@ -3,4 +3,4 @@ message: '%s'
 level: suggestion
 ignorecase: true
 swap:
-  click on: "Use 'click' or 'select'
+  click on: "Use 'click' or 'select'"

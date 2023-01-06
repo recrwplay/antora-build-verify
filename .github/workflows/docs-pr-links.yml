@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  get-diff:
+  check-diff-links:
     name: List files containing new and changed links
     runs-on: ubuntu-latest
     steps:
@@ -37,17 +37,22 @@ jobs:
       - run: git fetch origin ${{ github.base_ref }}
 
 
-      - id: link-count
+      - id: get-link-count
         run: |
           linkcount="$(git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | wc -l)"
           echo "$linkcount"
           echo "link-count=$linkcount" >> $GITHUB_OUTPUT
 
-
       - run: 'git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*?)(index)?\.adoc/) { print \"localhost:8000/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > diff-links.txt'
 
+      - name: Check links
+        if: ${{ steps.get-link-count.outputs.link-count > 0 }}
+        run: | 
+          npm install
+          npm run build
+          $(npm bin)/link-checker build/site --do-file diff-links.txt --skip-file scripts/ignore-links.txt
 
-      # upload result
+      # upload file list
 
       - name: Save diff output as artifact
         uses: actions/upload-artifact@v3
@@ -56,21 +61,5 @@ jobs:
           path: diff-links.txt
 
     outputs:
-      link-count: ${{ steps.link-count.outputs.link-count }}
+      link-count: ${{ steps.get-link-count.outputs.link-count }}
 
-  check-links:
-    name: Check links
-    runs-on: ubuntu-latest
-    needs: get-diff
-    if: ${{ needs.get-diff.outputs.link-count > 0 }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download Antora log
-        uses: actions/download-artifact@v3
-        with:
-          name: diff
-      - run: npm install
-      # - run: npm run check-links-diff
-      - run: npm run build
-      - run: $(npm bin)/link-checker build/site --do-file diff-links.txt --skip-file scripts/ignore-links.txt
-       

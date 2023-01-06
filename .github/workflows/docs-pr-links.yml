@@ -35,19 +35,17 @@ jobs:
 
       # get files with link: from the diff
       - run: git fetch origin ${{ github.base_ref }}
-        shell: bash
+
 
       - id: link-count
         run: |
           linkcount="git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | wc -l"
           echo "$linkcount"
           echo "link-count=$linkcount" >> $GITHUB_OUTPUT
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}   
+
 
       - run: 'git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*?)(index)?\.adoc/) { print \"localhost:8000/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > diff-links.txt'
-        shell: bash
+
 
       # upload result
 

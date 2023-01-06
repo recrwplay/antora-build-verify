@@ -1,4 +1,4 @@
-# Antora and github actions tests
+# Antora and Github actions tests
 :an-attribute: 'an attribute'
 :description: Just testing workflows, actions, annotations.
 
@@ -6,10 +6,14 @@
 
 include::partial$include-target.adoc[]
 
-I have {an-attribute} that I can use here.
+You can use {an-attribute} here.
 
-This sentence has been added to see if the pr comment is repeated or updated.
-
-This branch contains a change to test inputs when building from a PR.
+This branch contains changes to test inputs when building from a PR.
 
 link:./link-target[Link targets]
+
+## Vocabulary
+
+You use a vocabulary to test accepted and rejected words.
+It is fine to talk about clusters, but not about a causal cluster.
+You should not mention casual clusters whatever you do.

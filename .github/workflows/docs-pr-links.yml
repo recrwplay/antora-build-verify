@@ -9,7 +9,7 @@ on:
 jobs:
 
   link-diff:
-    name: Get list of changed files where a link is in the diff
+    name: Verify updated or new links
     runs-on: ubuntu-latest
     steps:
 

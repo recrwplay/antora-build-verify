@@ -36,8 +36,8 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
-      - id: build-verify
-        name: Build and verify
+      - id: generate-html
+        name: Generate HTML
         uses: ./.github/actions/docs/build-verify
         with:
           package-script: 'build-verify'

@@ -35,7 +35,7 @@ jobs:
   # check all links
   check-links-publish:
     name: Check links
-    needs: build-verify
+    needs: docs-build-verify
     runs-on: ubuntu-latest
     steps:
       

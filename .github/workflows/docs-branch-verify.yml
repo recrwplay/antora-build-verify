@@ -14,7 +14,7 @@ on:
 
 jobs:
        
-  build-verify:
+  docs-build-verify:
     name: Verify Antora log
     runs-on: ubuntu-latest
     steps:

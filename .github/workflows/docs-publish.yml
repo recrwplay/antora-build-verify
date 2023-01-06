@@ -1,11 +1,10 @@
-# build-verify.yml
+# docs-publish.yml
 
-# 1. Build docs using preview.yml (which builds for the current branch)
+# 1. Build docs using publish.yml
 # 2. Check for warnings and errors in the Antora log
-# 3. Run link-checker against the branch docs
+# 3. Publish HTML
 
-# This is an example of the build-verify.yml workflow available from the recrwplay org
-name: "Documentation Publish"
+name: "Publish Documentation"
 
 on:
   push:
@@ -15,7 +14,7 @@ on:
 jobs:
        
   # build and verify the asciidoc
-  build-verify:
+  docs-build-verify:
     name: Verify Antora log
     runs-on: ubuntu-latest
     steps:
@@ -38,6 +37,9 @@ jobs:
     name: Publish ${{ github.event.repository.name}} HTML
     runs-on: ubuntu-latest
     steps:
+
+      - uses: actions/checkout@v3
+
       - name: Download Antora output
         uses: actions/download-artifact@v3
         with:

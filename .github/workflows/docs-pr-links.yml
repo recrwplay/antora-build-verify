@@ -32,7 +32,7 @@ jobs:
         with:
           file: './antora.yml'
           key-path: '["version"]'
-          
+
       # get files with link: from the diff
       - run: git fetch origin ${{ github.base_ref }}
         shell: bash
@@ -51,5 +51,5 @@ jobs:
       - run: npm install
       # - run: npm run check-links-diff
       - run: npm run build
-      - run: link-checker build/site --do-file diff-links.txt --skip-file scripts/ignore-links.txt
+      - run: $(npm bin)/link-checker build/site --do-file diff-links.txt --skip-file scripts/ignore-links.txt
        

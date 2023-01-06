@@ -43,6 +43,8 @@ jobs:
           echo "$linkcount"
           echo "link-count=$linkcount" >> $GITHUB_OUTPUT
 
+      - run: npm install pino-pretty
+
       - run: 'git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*?)(index)?\.adoc/) { print \"localhost:8000/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > diff-links.txt'
 
       - name: Check links

@@ -11,6 +11,11 @@ inputs:
     required: true
     type: number
     default: 7
+  deploy-id:
+    description: 'An id if the output is to be deployed'
+    required: true
+    type: string
+    default: 'id-'
 
 runs:
   using: "composite"
@@ -22,7 +27,12 @@ runs:
 
   - run: npm install --omit=dev
     shell: bash
+
   - run: npm run ${{ inputs.package-script }}
+    shell: bash
+
+  - name: Save event-id
+    run: echo ${{ inputs.deploy-id }} > ./build/deployid
     shell: bash
 
   - name: Upload HTML artifact

@@ -9,7 +9,9 @@ Generally this should be an `xref:` anyway.
 link:../link-target[Link targets]
 
 
-## Valid external link
+## Valid External Link
+
+The title should be flagged for style.
 
 link:{neo4j-docs-base-uri}/getting-started/current/get-started-with-neo4j/[Getting Started]
 

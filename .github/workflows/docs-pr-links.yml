@@ -42,6 +42,7 @@ jobs:
           linkcount="git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | wc -l"
           echo "$linkcount"
           echo "link-count=$linkcount" >> $GITHUB_OUTPUT
+        shell: bash
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}   
 

@@ -24,7 +24,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     outputs:
-      files-to-lint: ${{ steps.set-output.outputs.files-to-lint }}
+      files-to-lint: ${{ steps.get-files-to-lint.outputs.files-to-lint }}
 
   vale:
     name: Lint with Vale

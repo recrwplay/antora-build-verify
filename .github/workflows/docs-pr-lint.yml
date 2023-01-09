@@ -49,7 +49,7 @@ jobs:
   vale:
     name: Lint with Vale
     runs-on: ubuntu-latest
-    needs: files-to-lint
+    needs: vale-config
     if: ${{ needs.vale-config.outputs.files-to-lint != '[]' }}
     steps:
       - uses: actions/checkout@v3

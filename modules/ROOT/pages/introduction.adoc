@@ -20,3 +20,6 @@ link:{neo4j-docs-base-uri}/getting-started/current/get-started-with-neo4j/[Getti
 
 // link:https://neo4j.com/docs/getting-started/current/get-started-with-neo4j-oops/[Getting Started]
 
+## Buttons
+
+Click on all the buttons.

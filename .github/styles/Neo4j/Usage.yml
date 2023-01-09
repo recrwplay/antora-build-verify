@@ -1,6 +1,6 @@
 extends: substitution
-message: '%s'
+message: "Use '%s' instead of '%s'"
 level: suggestion
 ignorecase: true
 swap:
-  click on: "Use 'click' or 'select'"
+  click on: "'click' or 'select'"

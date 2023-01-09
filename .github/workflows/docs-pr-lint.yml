@@ -42,8 +42,8 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       
     outputs:
-      files-to-lint: ${{ steps.vale-config.outputs.files-to-lint }}
-      reporter: ${{ steps.vale-config.outputs.reporter }}
+      files-to-lint: ${{ steps.get-files-to-lint.outputs.files-to-lint }}
+      reporter: ${{ steps.get-files-to-lint.outputs.reporter }}
 
   vale:
     name: Lint with Vale

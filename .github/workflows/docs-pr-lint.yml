@@ -11,7 +11,7 @@ on:
     inputs:
       files:
         description: 'The files to lint'
-        default: '["modules/ROOT/pages/", "modules/ROOT/partials/"]'
+        default: '["modules/ROOT/pages", "modules/ROOT/partials"]'
         type: string
 
 jobs:

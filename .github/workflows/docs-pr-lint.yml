@@ -35,7 +35,7 @@ jobs:
           fi
           if [ ${{ github.event_name }} == 'workflow_dispatch' ]
           then
-            echo "files-to-lint=${{ github.event.inputs.files }}" >> $GITHUB_OUTPUT
+            echo 'files-to-lint=${{ github.event.inputs.files }}' >> $GITHUB_OUTPUT
             echo "reporter=github-check" >> $GITHUB_OUTPUT
           fi
         env:

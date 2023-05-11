@@ -13,6 +13,10 @@ on:
         description: 'The files to lint'
         default: '["modules/ROOT/pages", "modules/ROOT/partials"]'
         type: string
+      vale-fail-on-error:
+        description: 'Report vale errors as a failure'
+        default: 'false'
+        type: boolean
 
 jobs:
 
@@ -32,6 +36,7 @@ jobs:
             echo "$files"
             echo "files-to-lint=$files" >> $GITHUB_OUTPUT 
             echo "reporter=github-pr-check" >> $GITHUB_OUTPUT
+            echo "fail-on-error=true" >> $GITHUB_OUTPUT
           fi
           if [ ${{ github.event_name }} == 'workflow_dispatch' ]
           then
@@ -44,6 +49,7 @@ jobs:
     outputs:
       files-to-lint: ${{ steps.get-files-to-lint.outputs.files-to-lint }}
       reporter: ${{ steps.get-files-to-lint.outputs.reporter }}
+      fail-on-error: ${{ steps.get-files-to-lint.outputs.fail-on-error }}
 
   vale:
     name: Lint with Vale
@@ -56,5 +62,6 @@ jobs:
         with:
           files: ${{ needs.vale-config.outputs.files-to-lint }}
           reporter: ${{ needs.vale-config.outputs.reporter }}
+          fail_on_error: ${{ needs.vale-config.outputs.fail-on-error }}
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

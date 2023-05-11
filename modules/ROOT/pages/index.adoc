@@ -22,9 +22,15 @@ You should not mention casual clusters whatever you do.
 
 Ths is a sentence with a comma, and then another comma, and more commas follow, which is maybe too many, or maybe not.
 I will be the judge of how bad this writing is.
+
 The close window dialog will open.
+
 Click on the button to close the window.
+
 The window will close.
-The database will stop
+
+The database will stop.
+
+I didn't write this too good.
 
 link:./link-target[Link targets]

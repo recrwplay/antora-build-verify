@@ -34,3 +34,5 @@ The database will stop.
 I didn't write this too good.
 
 link:./link-target[Link target changed in PR]
+
+link:./slinky-target[Deliberately broken link]

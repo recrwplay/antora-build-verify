@@ -23,7 +23,8 @@
     "@antora/cli": "^3.0.0",
     "@antora/site-generator-default": "^3.0.0",
     "@neo4j-antora/antora-modify-sitemaps": "^0.3.3",
-    "@recrwplay/link-checker": "github:recrwplay/link-checker#v0.1.1"
+    "@recrwplay/link-checker": "github:recrwplay/link-checker#v0.1.1",
+    "pino-pretty": "^10.0.0"
   },
   "watch": {
     "build": {

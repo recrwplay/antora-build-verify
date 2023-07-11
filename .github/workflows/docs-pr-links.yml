@@ -54,6 +54,7 @@ jobs:
 
       - name: Check links
         if: ${{ steps.get-link-count.outputs.link-count > 0 }}
+        continue-on-error: true
         run: npm run check-links-diff > link-log.txt
 
       # read log and fail the workflow on errors

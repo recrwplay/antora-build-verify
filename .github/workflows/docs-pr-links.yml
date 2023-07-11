@@ -77,15 +77,21 @@ jobs:
 
       - id: file-count
         name: File count
-        run: echo "filecount=grep -e '^http' -c $linklog" >> "$GITHUB_OUTPUT"
+        run: |
+          filecount=grep -e '^http' -c $linklog
+          echo "filecount=$filecount" >> "$GITHUB_OUTPUT"
           
       - id: error-count
         name: 404 count
-        run: echo "errorcount=grep -e '(HTTP 404)' -c $linklog" >> "$GITHUB_OUTPUT" 
+        run: |
+          errorcount=grep -e '(HTTP 404)' -c $linklog
+          echo "errorcount=$errorcount" >> "$GITHUB_OUTPUT" 
 
       - id: warn-count
         name: 200 count
-        run: echo "warncount=grep -e '(HTTP 200)' -c $linklog" >> "$GITHUB_OUTPUT" 
+        run: |
+          warncount=grep -e '(HTTP 200)' -c $linklog
+          echo "warncount=$warncount" >> "$GITHUB_OUTPUT" 
 
       - id: status
         name: Report status as annotations

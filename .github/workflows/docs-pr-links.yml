@@ -1,7 +1,7 @@
 # docs-pr-links.yml
 # Runs the link checker on the PR branch to verify files that contain new or changed links
 
-name: "Documentation PR link-checker"
+name: "Documentation PR Link Check"
 
 on:
   pull_request:
@@ -48,9 +48,29 @@ jobs:
       - name: Get PR diff file list
         run: 'git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*?)(index)?\.adoc/) { print \"localhost:8000/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > diff-links.txt'
 
+      # - name: Check links
+      #   if: ${{ steps.get-link-count.outputs.link-count > 0 }}
+      #   run: npm run check-links-diff
+
       - name: Check links
         if: ${{ steps.get-link-count.outputs.link-count > 0 }}
-        run: npm run check-links-diff
+        run: npm run check-links-diff > link-log.txt
+
+      # read log and fail the workflow on errors
+      # output annotations
+      # probably don't fail on warnings (ie 200 errors in links)
+
+      - id: file-count
+        name: File count
+        run: echo "filecount=grep -e '^http' -c links.txt" >> "$GITHUB_OUTPUT"
+          
+      - id: error-count
+        name: 404 count
+        run: echo "errorcount=grep -e '(HTTP 404)' -c links.txt" >> "$GITHUB_OUTPUT" 
+
+      - id: warn-count
+        name: 200 count
+        run: echo "warncount=grep -e '(HTTP 200)' -c links.txt" >> "$GITHUB_OUTPUT" 
 
       # upload diff file list
 
@@ -59,6 +79,14 @@ jobs:
         with:
           name: diff
           path: diff-links.txt
+
+      - id: status
+        name: Report status as annotations
+        run: |
+          if [ ${{ steps.error-count.outputs.errorcount }} -gt 0 ]; then
+            echo "::error ${{ steps.error-count.outputs.errorcount }} broken links"
+            exit 1
+          fi
 
     outputs:
       link-count: ${{ steps.get-link-count.outputs.link-count }}

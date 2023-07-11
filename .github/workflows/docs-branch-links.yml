@@ -1,0 +1,67 @@
+# docs-pr-links.yml
+# Runs the link checker on the PR branch to verify files that contain new or changed links
+
+name: "Documentation PR Link Check"
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+
+  check-links:
+    name: Check links
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - id: antora-component-name
+        name: Read antora component name
+        uses: jbutcher5/read-yaml@main
+        with:
+          file: './antora.yml'
+          key-path: '["name"]'
+
+      - id: antora-component-version
+        name: Read antora component version
+        uses: jbutcher5/read-yaml@main
+        with:
+          file: './antora.yml'
+          key-path: '["version"]'
+
+      - name: Install packages
+        run: npm install
+
+      - name: Check links
+        run: npm run check-links-publish > link-log.txt
+
+      - name: Upload link log
+        uses: actions/upload-artifact@v3
+        with:
+          name: link-log
+          path: link-log.txt
+
+      # read log and fail the workflow on errors
+      # output annotations
+      # probably don't fail on warnings (ie 200 errors in links)
+
+      - id: file-count
+        name: File count
+        run: echo "filecount=grep -e '^http' -c links.txt" >> "$GITHUB_OUTPUT"
+          
+      - id: error-count
+        name: 404 count
+        run: echo "errorcount=grep -e '(HTTP 404)' -c links.txt" >> "$GITHUB_OUTPUT" 
+
+      - id: warn-count
+        name: 200 count
+        run: echo "warncount=grep -e '(HTTP 200)' -c links.txt" >> "$GITHUB_OUTPUT" 
+
+      # - id: status
+      #   name: Report status as annotations
+      #   needs: steps.error-count.outputs.errorcount
+      #   run: |
+          

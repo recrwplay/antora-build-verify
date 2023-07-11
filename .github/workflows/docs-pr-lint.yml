@@ -3,7 +3,7 @@
 # Current POC uses the Google style guide as a base set of rules
 # See .vale.ini for the current set of rules
 
-name: "Documentation Style Guide Lint"
+name: "Documentation Style Guide Check"
 
 on:
   pull_request:

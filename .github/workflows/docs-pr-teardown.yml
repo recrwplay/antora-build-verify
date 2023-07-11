@@ -1,6 +1,6 @@
 # Teardown the surg.sh site when a PR is closed.
 
-name: "Documentation Teardown"
+name: "Documentation PR Teardown"
 
 on:
   pull_request_target:

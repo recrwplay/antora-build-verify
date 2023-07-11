@@ -57,29 +57,35 @@ jobs:
         continue-on-error: true
         run: npm run check-links-diff > link-log.txt
 
-      # read log and fail the workflow on errors
-      # output annotations
-      # probably don't fail on warnings (ie 200 errors in links)
-
-      - id: file-count
-        name: File count
-        run: echo "filecount=grep -e '^http' -c links.txt" >> "$GITHUB_OUTPUT"
-          
-      - id: error-count
-        name: 404 count
-        run: echo "errorcount=grep -e '(HTTP 404)' -c links.txt" >> "$GITHUB_OUTPUT" 
-
-      - id: warn-count
-        name: 200 count
-        run: echo "warncount=grep -e '(HTTP 200)' -c links.txt" >> "$GITHUB_OUTPUT" 
-
-      # upload diff file list
+      # upload artifacts
 
       - name: Save diff output as artifact
         uses: actions/upload-artifact@v3
         with:
           name: diff
           path: diff-links.txt
+
+      - name: Save link-checker output as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: link-log
+          path: link-log.txt
+
+      # read log and fail the workflow on errors
+      # output annotations
+      # probably don't fail on warnings (ie 200 errors in links)
+
+      - id: file-count
+        name: File count
+        run: echo "filecount=grep -e '^http' -c link-log.txt" >> "$GITHUB_OUTPUT"
+          
+      - id: error-count
+        name: 404 count
+        run: echo "errorcount=grep -e '(HTTP 404)' -c link-log.txt" >> "$GITHUB_OUTPUT" 
+
+      - id: warn-count
+        name: 200 count
+        run: echo "warncount=grep -e '(HTTP 200)' -c link-log.txt" >> "$GITHUB_OUTPUT" 
 
       - id: status
         name: Report status as annotations

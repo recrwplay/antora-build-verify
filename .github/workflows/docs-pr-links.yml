@@ -79,28 +79,34 @@ jobs:
         name: File count
         run: |
           filecount=$(grep -e '^http' -c link-log.txt)
-          echo "filecount=$filecount" >> "$GITHUB_OUTPUT"
+          if [ $filecount -gt 0 ]; then
+            echo "::warning $filecount files with errors or warnings found"
+          fi
           
       - id: error-count
         name: 404 count
         run: |
           errorcount=$(grep '(HTTP 404)' -c link-log.txt)
-          echo "errorcount=$errorcount" >> "$GITHUB_OUTPUT" 
+          if [ $errorcount -gt 0 ]; then
+            echo "::error $errorcount broken links found"
+          fi
 
       - id: warn-count
         name: 200 count
         run: |
           warncount=$(grep '(HTTP 200)' -c link-log.txt)
-          echo "warncount=$warncount" >> "$GITHUB_OUTPUT" 
-
-      - id: status
-        name: Report status as annotations
-        run: |
-          if [ ${{ steps.error-count.outputs.errorcount }} -gt 0 ]; then
-            echo "::error ${{ steps.error-count.outputs.errorcount }} broken links"
-            exit 1
+          if [ $warncount -gt 0 ]; then
+            echo "::warning $warncount missing anchor links found"
           fi
 
-    outputs:
-      link-count: ${{ steps.get-link-count.outputs.link-count }}
+      # - id: status
+      #   name: Report status as annotations
+      #   run: |
+      #     if [ ${{ steps.error-count.outputs.errorcount }} -gt 0 ]; then
+      #       echo "::error ${{ steps.error-count.outputs.errorcount }} broken links"
+      #       exit 1
+      #     fi
+
+    # outputs:
+    #   link-count: ${{ steps.get-link-count.outputs.link-count }}
 

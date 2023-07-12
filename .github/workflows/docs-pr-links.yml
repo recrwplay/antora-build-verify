@@ -51,7 +51,7 @@ jobs:
       - name: Check links
         if: ${{ steps.get-link-count.outputs.link-count > 0 }}
         continue-on-error: true
-        run: npm run check-links-diff > link-log.txt
+        run: npm run check-links-diff |& link-log.txt
 
       # upload artifacts
 
@@ -92,7 +92,7 @@ jobs:
         run: |
           errorcount=$(grep -e "[0-9]* errors" -o link-log.txt | sed 's/ errors//' )
           if [ $errorcount -gt 0 ]; then
-            echo "::error:: $errorcount errors"
+            echo "::error:: Errors found: See the output of the Check links step for details"
             exit 1
           fi
   

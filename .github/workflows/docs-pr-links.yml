@@ -86,7 +86,7 @@ jobs:
       - id: error-count
         name: Error count
         run: |
-          errorcount=$(grep -e "[0-9]* errors" -o links.txt | sed 's/ errors//' )
+          errorcount=$(grep -e "[0-9]* errors" -o link-log.txt | sed 's/ errors//' )
           if [ $errorcount -gt 0 ]; then
             echo "::error:: $errorcount errors"
           fi
@@ -94,7 +94,7 @@ jobs:
       - id: warn-count
         name: Warning count
         run: |
-          warncount=$(grep -e "[0-9]* warnings" -o links.txt | sed 's/ warnings//' )
+          warncount=$(grep -e "[0-9]* warnings" -o link-log.txt | sed 's/ warnings//' )
           if [ $warncount -gt 0 ]; then
             echo "::warning:: $warncount warnings"
           fi

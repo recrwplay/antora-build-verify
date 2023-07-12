@@ -91,13 +91,13 @@ jobs:
             echo "::error $errorcount broken links found"
           fi
 
-      - id: warn-count
-        name: 200 count
-        run: |
-          warncount=$(grep -e '(HTTP 200)' -c link-log.txt)
-          if ! [ -z $warncount ]; then
-            echo "::warning $warncount missing anchor links found"
-          fi
+      # - id: warn-count
+      #   name: 200 count
+      #   run: |
+      #     warncount=$(grep -e '(HTTP 200)' -c link-log.txt)
+      #     if ! [ -z $warncount ]; then
+      #       echo "::warning $warncount missing anchor links found"
+      #     fi
 
       # - id: status
       #   name: Report status as annotations

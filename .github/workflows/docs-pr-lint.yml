@@ -15,7 +15,7 @@ on:
         type: string
       vale-fail-on-error:
         description: 'Report vale errors as a failure'
-        default: 'false'
+        default: false
         type: boolean
 
 jobs:

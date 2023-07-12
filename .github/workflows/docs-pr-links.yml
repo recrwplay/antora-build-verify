@@ -75,28 +75,28 @@ jobs:
       # output annotations
       # probably don't fail on warnings (ie 200 errors in links)
 
-      - id: file-count
-        name: File count
-        run: |
-          filecount=$(grep -e '^http' -c link-log.txt || 0)
-          if [ $filecount -gt 0 ]; then
-            echo "::warning:: files with errors or warnings found"
-          fi
+      # - id: file-count
+      #   name: File count
+      #   run: |
+      #     filecount=$(grep -e '^http' -c link-log.txt || 0)
+      #     if [ $filecount -gt 0 ]; then
+      #       echo "::warning:: files with errors or warnings found"
+      #     fi
           
       - id: error-count
-        name: 404 error count
+        name: Error count
         run: |
-          errorcount=$(grep '(HTTP 404)' -c link-log.txt || 0)
+          errorcount=$(-e "[0-9]* errors" -o)
           if [ $errorcount -gt 0 ]; then
-            echo "::error:: broken links found"
+            echo "::error:: $errorcount errors"
           fi
 
       - id: warn-count
-        name: 200 warning count
+        name: Warning count
         run: |
-          warncount=$(grep -e '(HTTP 200)' -c link-log.txt || 0)
+          warncount=$(-e "[0-9]* warnings" -o)
           if [ $warncount -gt 0 ]; then
-            echo "::warning:: missing anchor links found"
+            echo "::warning:: $warncount warnings"
           fi
 
       # - id: status

@@ -4,7 +4,7 @@
 # 2. Check for warnings and errors in the Antora log
 # 3. Run link-checker against the branch docs
 
-name: "Verify Documentation Branch"
+name: "Documentation Branch Build"
 
 on:
   push:

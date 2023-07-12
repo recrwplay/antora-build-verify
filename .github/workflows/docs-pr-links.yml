@@ -1,7 +1,7 @@
 # docs-pr-links.yml
 # Runs the link checker on the PR branch to verify files that contain new or changed links
 
-name: "Documentation PR link-checker"
+name: "Documentation PR Link Check"
 
 on:
   pull_request:
@@ -43,18 +43,17 @@ jobs:
           echo "$linkcount"
           echo "link-count=$linkcount" >> $GITHUB_OUTPUT
 
-      - run: npm install pino-pretty
+      - run: npm install
 
-      - run: 'git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*?)(index)?\.adoc/) { print \"localhost:8000/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > diff-links.txt'
+      - name: Get PR diff file list
+        run: 'git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*?)(index)?\.adoc/) { print \"localhost:8000/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > diff-links.txt'
 
       - name: Check links
         if: ${{ steps.get-link-count.outputs.link-count > 0 }}
-        run: | 
-          npm install
-          npm run build
-          $(npm bin)/link-checker build/site --do-file diff-links.txt --skip-file scripts/ignore-links.txt
+        continue-on-error: true
+        run: npm run check-links-diff |& tee link-log.txt
 
-      # upload file list
+      # upload artifacts
 
       - name: Save diff output as artifact
         uses: actions/upload-artifact@v3
@@ -62,6 +61,50 @@ jobs:
           name: diff
           path: diff-links.txt
 
-    outputs:
-      link-count: ${{ steps.get-link-count.outputs.link-count }}
+      - name: Save link-checker output as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: linklog
+          path: link-log.txt
+
+      # read log and fail the workflow on errors
+      # output annotations
+      # probably don't fail on warnings (ie 200 errors in links)
+
+      # - id: file-count
+      #   name: File count
+      #   run: |
+      #     filecount=$(grep -e '^http' -c link-log.txt || 0)
+      #     if [ $filecount -gt 0 ]; then
+      #       echo "::warning:: files with errors or warnings found"
+      #     fi
+          
+      - id: warn-count
+        name: Warning count
+        run: |
+          warncount=$(grep -e "[0-9]* warnings" -o link-log.txt | sed 's/ warnings//' )
+          if [ $warncount -gt 0 ]; then
+            echo "::warning:: $warncount warnings"
+          fi
+
+      - id: error-count
+        name: Error count
+        run: |
+          errorcount=$(grep -e "[0-9]* errors" -o link-log.txt | sed 's/ errors//' )
+          if [ $errorcount -gt 0 ]; then
+            echo "::error:: Errors found: See the output of the Check links step for details"
+            exit 1
+          fi
+  
+
+      # - id: status
+      #   name: Report status as annotations
+      #   run: |
+      #     if [ ${{ steps.error-count.outputs.errorcount }} -gt 0 ]; then
+      #       echo "::error ${{ steps.error-count.outputs.errorcount }} broken links"
+      #       exit 1
+      #     fi
+
+    # outputs:
+    #   link-count: ${{ steps.get-link-count.outputs.link-count }}
 

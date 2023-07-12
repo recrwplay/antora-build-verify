@@ -78,19 +78,19 @@ jobs:
       - id: file-count
         name: File count
         run: |
-          filecount=$(grep '^http' -c $linklog)
+          filecount=$(grep -e '^http' -c link-log.txt)
           echo "filecount=$filecount" >> "$GITHUB_OUTPUT"
           
       - id: error-count
         name: 404 count
         run: |
-          errorcount=$(grep '(HTTP 404)' -c $linklog)
+          errorcount=$(grep '(HTTP 404)' -c link-log.txt)
           echo "errorcount=$errorcount" >> "$GITHUB_OUTPUT" 
 
       - id: warn-count
         name: 200 count
         run: |
-          warncount=$(grep '(HTTP 200)' -c $linklog)
+          warncount=$(grep '(HTTP 200)' -c link-log.txt)
           echo "warncount=$warncount" >> "$GITHUB_OUTPUT" 
 
       - id: status

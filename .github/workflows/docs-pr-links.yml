@@ -51,7 +51,7 @@ jobs:
       - name: Check links
         if: ${{ steps.get-link-count.outputs.link-count > 0 }}
         continue-on-error: true
-        run: npm run check-links-diff |& link-log.txt
+        run: npm run check-links-diff |& tee link-log.txt
 
       # upload artifacts
 

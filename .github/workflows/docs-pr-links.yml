@@ -79,7 +79,7 @@ jobs:
         name: File count
         run: |
           filecount=$(grep -e '^http' -c link-log.txt)
-          if [ $filecount -gt 0 ]; then
+          if ! [ -z $filecount ]; then
             echo "::warning $filecount files with errors or warnings found"
           fi
           
@@ -87,7 +87,7 @@ jobs:
         name: 404 count
         run: |
           errorcount=$(grep '(HTTP 404)' -c link-log.txt)
-          if [ $errorcount -gt 0 ]; then
+          if ! [ -z $errorcount ]; then
             echo "::error $errorcount broken links found"
           fi
 
@@ -95,7 +95,7 @@ jobs:
         name: 200 count
         run: |
           warncount=$(grep '(HTTP 200)' -c link-log.txt)
-          if [ $warncount -gt 0 ]; then
+          if ! [ -z $warncount ]; then
             echo "::warning $warncount missing anchor links found"
           fi
 

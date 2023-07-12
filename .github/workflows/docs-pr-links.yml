@@ -48,10 +48,6 @@ jobs:
       - name: Get PR diff file list
         run: 'git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | npx pino-pretty | perl -ne "if (/^modules\/ROOT\/pages\/(.*?)(index)?\.adoc/) { print \"localhost:8000/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\$1\n\" }" > diff-links.txt'
 
-      # - name: Check links
-      #   if: ${{ steps.get-link-count.outputs.link-count > 0 }}
-      #   run: npm run check-links-diff
-
       - name: Check links
         if: ${{ steps.get-link-count.outputs.link-count > 0 }}
         continue-on-error: true
@@ -83,14 +79,6 @@ jobs:
       #       echo "::warning:: files with errors or warnings found"
       #     fi
           
-      - id: error-count
-        name: Error count
-        run: |
-          errorcount=$(grep -e "[0-9]* errors" -o link-log.txt | sed 's/ errors//' )
-          if [ $errorcount -gt 0 ]; then
-            echo "::error:: $errorcount errors"
-          fi
-
       - id: warn-count
         name: Warning count
         run: |
@@ -98,6 +86,16 @@ jobs:
           if [ $warncount -gt 0 ]; then
             echo "::warning:: $warncount warnings"
           fi
+
+      - id: error-count
+        name: Error count
+        run: |
+          errorcount=$(grep -e "[0-9]* errors" -o link-log.txt | sed 's/ errors//' )
+          if [ $errorcount -gt 0 ]; then
+            echo "::error:: $errorcount errors"
+            exit 1
+          fi
+  
 
       # - id: status
       #   name: Report status as annotations

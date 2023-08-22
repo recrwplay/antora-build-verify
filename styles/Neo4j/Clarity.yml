@@ -1,0 +1,6 @@
+extends: substitution
+message: '%s'
+level: suggestion
+ignorecase: true
+swap:
+  maybe: "Write with confidence."

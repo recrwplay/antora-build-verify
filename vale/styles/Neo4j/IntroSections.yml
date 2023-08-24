@@ -1,7 +1,7 @@
 extends: existence
 scope: paragraph
-message: Don't use '%s' to introduce content.
-level: warning
+message: Try to avoid using '%s' to introduce content.
+level: suggestion
 ignorecase: false
 tokens:
     - This manual

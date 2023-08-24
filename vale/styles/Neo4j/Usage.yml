@@ -4,3 +4,4 @@ level: suggestion
 ignorecase: true
 swap:
   click on: "Use 'click' or 'select'"
+  may: "Use 'might' or 'can'"

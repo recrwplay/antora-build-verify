@@ -2,7 +2,7 @@ extends: existence
 message: "Avoid using 'v' or 'version' when referring to a specific version of Neo4j '%s'."
 link: 'https://developers.google.com/style/pronouns#personal-pronouns'
 ignorecase: true
-level: warning
+level: suggestion
 tokens:
   - \bNeo4j version [0-9]\b
   - \bNeo4j v[0-9]\b

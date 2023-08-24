@@ -5,4 +5,3 @@ ignorecase: true
 swap:
   top left: upper left
   top right: upper right
-  click: select
